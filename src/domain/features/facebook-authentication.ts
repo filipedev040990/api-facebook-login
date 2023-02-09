@@ -5,7 +5,7 @@ export interface FacebookAuthentication {
   execute: (input: FacebookAuthentication.Input) => Promise<FacebookAuthentication.Output>
 }
 
-namespace FacebookAuthentication {
+export namespace FacebookAuthentication {
   export type Input = {
     accessToken: string
   }
