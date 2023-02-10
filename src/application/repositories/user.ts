@@ -8,9 +8,8 @@ export namespace GetUserRepository {
   }
 
   export type Output = undefined | {
-    name: string
-    email: string
-    facebookId: string
+    id: string
+    name?: string
   }
 }
 
@@ -26,4 +25,16 @@ export namespace CreateUserFromFacebookRepository {
   }
 
   export type Output = undefined
+}
+
+export interface UpdateUserWithFacebookRepository {
+  updateWithFacebook: (input: UpdateUserWithFacebookRepository.Input) => Promise<void>
+}
+
+export namespace UpdateUserWithFacebookRepository {
+  export type Input = {
+    id: string
+    name: string
+    facebookId: string
+  }
 }
