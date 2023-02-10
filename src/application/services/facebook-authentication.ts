@@ -5,17 +5,16 @@ import { CreateUserFromFacebookRepository, GetUserRepository } from '@/applicati
 
 export class FacebookAuthenticationService {
   constructor (
-    private readonly getFacebookUser: GetFacebookUserApi,
-    private readonly getUserRepository: GetUserRepository,
-    private readonly createUserFromFacebook: CreateUserFromFacebookRepository
+    private readonly facebookApi: GetFacebookUserApi,
+    private readonly userRepository: GetUserRepository & CreateUserFromFacebookRepository
   ) {}
 
   async execute (params: FacebookAuthentication.Input): Promise<FacebookAuthentication.Output> {
-    const userData = await this.getFacebookUser.getUser({ token: params.token })
+    const userData = await this.facebookApi.getUser({ token: params.token })
     if (userData) {
-      const userExists = await this.getUserRepository.getByEmail({ email: userData.email })
+      const userExists = await this.userRepository.getByEmail({ email: userData.email })
       if (!userExists) {
-        await this.createUserFromFacebook.createFromFacebook(userData)
+        await this.userRepository.createFromFacebook(userData)
       }
     }
 
