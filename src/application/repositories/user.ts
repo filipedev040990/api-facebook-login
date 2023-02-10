@@ -13,28 +13,17 @@ export namespace GetUserRepository {
   }
 }
 
-export interface CreateUserFromFacebookRepository {
-  createFromFacebook: (input: CreateUserFromFacebookRepository.Input) => Promise<CreateUserFromFacebookRepository.Output>
+export interface SaveUserFromFacebookRepository {
+  saveWithFacebook: (input: SaveUserFromFacebookRepository.Input) => Promise<SaveUserFromFacebookRepository.Output>
 }
 
-export namespace CreateUserFromFacebookRepository {
+export namespace SaveUserFromFacebookRepository {
   export type Input = {
+    id?: string
     name: string
     email: string
     facebookId: string
   }
 
   export type Output = undefined
-}
-
-export interface UpdateUserWithFacebookRepository {
-  updateWithFacebook: (input: UpdateUserWithFacebookRepository.Input) => Promise<void>
-}
-
-export namespace UpdateUserWithFacebookRepository {
-  export type Input = {
-    id: string
-    name: string
-    facebookId: string
-  }
 }
