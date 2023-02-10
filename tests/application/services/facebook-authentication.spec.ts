@@ -2,7 +2,7 @@ import { FacebookAuthenticationService } from '@/application/services'
 import { GetFacebookUserApi } from '@/application/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { GetUserRepository } from '@/application/repositories'
+import { GetUserRepository, CreateUserFromFacebookRepository } from '@/application/repositories'
 
 const userData = {
   name: 'Any Name',
@@ -13,7 +13,8 @@ const userData = {
 let token: string
 let getFacebookUserApi: MockProxy<GetFacebookUserApi>
 let sut: FacebookAuthenticationService
-let userRepository: GetUserRepository
+let getUserRepository: MockProxy<GetUserRepository>
+let createUserFromFacebookRepository: MockProxy<CreateUserFromFacebookRepository>
 
 describe('FacebookAuthenticationService', () => {
   beforeEach(() => {
@@ -22,9 +23,11 @@ describe('FacebookAuthenticationService', () => {
     getFacebookUserApi = mock()
     getFacebookUserApi.getUser.mockResolvedValue(userData)
 
-    userRepository = mock()
+    getUserRepository = mock()
 
-    sut = new FacebookAuthenticationService(getFacebookUserApi, userRepository)
+    createUserFromFacebookRepository = mock()
+
+    sut = new FacebookAuthenticationService(getFacebookUserApi, getUserRepository, createUserFromFacebookRepository)
   })
 
   test('should call GetFacebookUserApi with correct params', async () => {
@@ -40,7 +43,18 @@ describe('FacebookAuthenticationService', () => {
 
   test('should call GetUserRepository.getByEmail with correct email when GetFacebookUserApi returns data', async () => {
     await sut.execute({ token })
-    expect(userRepository.getByEmail).toHaveBeenCalledTimes(1)
-    expect(userRepository.getByEmail).toHaveBeenCalledWith({ email: 'anyEmail@email.com' })
+    expect(getUserRepository.getByEmail).toHaveBeenCalledTimes(1)
+    expect(getUserRepository.getByEmail).toHaveBeenCalledWith({ email: 'anyEmail@email.com' })
+  })
+
+  test('should call CreateUserRepository.update with correct values when GetFacebookUserApi returns undefined', async () => {
+    getUserRepository.getByEmail.mockResolvedValueOnce(undefined)
+    await sut.execute({ token })
+    expect(createUserFromFacebookRepository.createFromFacebook).toHaveBeenCalledTimes(1)
+    expect(createUserFromFacebookRepository.createFromFacebook).toHaveBeenCalledWith({
+      name: 'Any Name',
+      email: 'anyEmail@email.com',
+      facebookId: 'Any Facebook Id'
+    })
   })
 })
