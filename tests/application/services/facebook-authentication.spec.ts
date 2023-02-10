@@ -1,8 +1,12 @@
 import { FacebookAuthenticationService } from '@/application/services'
 import { GetFacebookUserApi } from '@/application/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
-import { mock, MockProxy } from 'jest-mock-extended'
 import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/repositories'
+import { FacebookUserEntity } from '@/domain/entities/facebook-user'
+import { mock, MockProxy } from 'jest-mock-extended'
+import { mocked } from 'ts-jest/utils'
+
+jest.mock('@/domain/entities/facebook-user')
 
 const userData = {
   name: 'Any Facebook Name',
@@ -45,39 +49,19 @@ describe('FacebookAuthenticationService', () => {
     expect(userRepository.getByEmail).toHaveBeenCalledWith({ email: 'anyEmail@email.com' })
   })
 
-  test('should save a new user', async () => {
-    await sut.execute({ token })
-    expect(userRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
-    expect(userRepository.saveWithFacebook).toHaveBeenCalledWith({
+  test('should call UserRepository onde and with FacebookUserEntity instance', async () => {
+    const FacebookUserEntityStub = jest.fn().mockImplementationOnce(() => ({
       name: 'Any Facebook Name',
       email: 'anyEmail@email.com',
       facebookId: 'Any Facebook Id'
-    })
-  })
+    }))
 
-  test('should not update a user name', async () => {
-    userRepository.getByEmail.mockResolvedValueOnce({
-      id: 'anyID',
-      name: 'Any Name'
-    })
+    mocked(FacebookUserEntity).mockImplementationOnce(FacebookUserEntityStub)
+
     await sut.execute({ token })
+
     expect(userRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
     expect(userRepository.saveWithFacebook).toHaveBeenCalledWith({
-      id: 'anyID',
-      name: 'Any Name',
-      email: 'anyEmail@email.com',
-      facebookId: 'Any Facebook Id'
-    })
-  })
-
-  test('should update user name', async () => {
-    userRepository.getByEmail.mockResolvedValueOnce({
-      id: 'anyID'
-    })
-    await sut.execute({ token })
-    expect(userRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
-    expect(userRepository.saveWithFacebook).toHaveBeenCalledWith({
-      id: 'anyID',
       name: 'Any Facebook Name',
       email: 'anyEmail@email.com',
       facebookId: 'Any Facebook Id'
