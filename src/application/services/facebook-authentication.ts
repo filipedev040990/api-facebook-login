@@ -10,17 +10,17 @@ export class FacebookAuthenticationService {
   ) {}
 
   async execute (params: FacebookAuthentication.Input): Promise<FacebookAuthentication.Output> {
-    const userData = await this.facebookApi.getUser({ token: params.token })
-    if (userData) {
-      const userExists = await this.userRepository.getByEmail({ email: userData.email })
-      if (userExists?.name) {
+    const facebookData = await this.facebookApi.getUser({ token: params.token })
+    if (facebookData) {
+      const userExists = await this.userRepository.getByEmail({ email: facebookData.email })
+      if (userExists) {
         await this.userRepository.updateWithFacebook({
           id: userExists.id,
-          name: userExists.name,
-          facebookId: userData.facebookId
+          name: userExists.name ?? facebookData.name,
+          facebookId: facebookData.facebookId
         })
       } else {
-        await this.userRepository.createFromFacebook(userData)
+        await this.userRepository.createFromFacebook(facebookData)
       }
     }
 
