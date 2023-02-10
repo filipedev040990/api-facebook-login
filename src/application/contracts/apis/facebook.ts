@@ -4,7 +4,7 @@ export interface GetFacebookUserApi {
 
 export namespace GetFacebookUserApi {
   export type Input = {
-    accessToken: string
+    token: string
   }
 
   export type Output = undefined

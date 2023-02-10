@@ -7,7 +7,7 @@ export interface FacebookAuthentication {
 
 export namespace FacebookAuthentication {
   export type Input = {
-    accessToken: string
+    token: string
   }
   export type Output = AccessToken | AuthenticationError
 }
