@@ -1,11 +1,11 @@
 import { GetFacebookUserApi } from '@/application/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/features'
-import { SaveUserFromFacebookRepository, GetUserRepository } from '@/application/repositories'
-import { FacebookUserEntity } from '@/domain/entities/facebook-user'
-import { TokenGenerator } from '../crypto/token'
+import { SaveUserFromFacebookRepository, GetUserRepository } from '@/application/contracts/repositories'
+import { FacebookUserEntity, AccessToken } from '@/domain/entities'
+import { TokenGenerator } from '../contracts/crypto/token'
 
-export class FacebookAuthenticationService {
+export class FacebookAuthenticationService implements FacebookAuthentication {
   constructor (
     private readonly facebookApi: GetFacebookUserApi,
     private readonly userRepository: GetUserRepository & SaveUserFromFacebookRepository,
@@ -18,7 +18,8 @@ export class FacebookAuthenticationService {
       const userExistsData = await this.userRepository.getByEmail({ email: facebookData.email })
       const facebookUser = new FacebookUserEntity(facebookData, userExistsData)
       const userId = await this.userRepository.saveWithFacebook(facebookUser)
-      this.crypto.generateToken({ key: userId.id })
+      const token = await this.crypto.generateToken({ key: userId.id, expirationInMs: AccessToken.expirationInMs })
+      return new AccessToken(token)
     }
 
     return new AuthenticationError()

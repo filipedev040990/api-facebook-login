@@ -1,11 +1,12 @@
 import { FacebookAuthenticationService } from '@/application/services'
 import { GetFacebookUserApi } from '@/application/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
-import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/repositories'
+import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { mocked } from 'ts-jest/utils'
-import { TokenGenerator } from '../crypto/token'
+import { TokenGenerator } from '../contracts/crypto/token'
+import { AccessToken } from '@/domain/entities'
 
 jest.mock('@/domain/entities/facebook-user')
 
@@ -33,6 +34,7 @@ describe('FacebookAuthenticationService', () => {
     userRepository.saveWithFacebook.mockResolvedValue({ id: 'anyId' })
 
     crypto = mock()
+    crypto.generateToken.mockResolvedValue('any_generated_token')
 
     sut = new FacebookAuthenticationService(facebookApi, userRepository, crypto)
   })
@@ -77,6 +79,12 @@ describe('FacebookAuthenticationService', () => {
     await sut.execute({ token })
 
     expect(crypto.generateToken).toHaveBeenCalledTimes(1)
-    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'anyId' })
+    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'anyId', expirationInMs: AccessToken.expirationInMs })
+  })
+
+  test('should return an AccessToken on success', async () => {
+    const accessToken = await sut.execute({ token })
+
+    expect(accessToken).toEqual(new AccessToken('any_generated_token'))
   })
 })
