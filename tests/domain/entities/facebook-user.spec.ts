@@ -1,4 +1,4 @@
-import { FacebookData, FacebookUserEntity, UserData } from '@/domain/entities/facebook-user'
+import { FacebookData, FacebookUserEntity, UserData } from '@/domain/entities'
 
 let facebookData: FacebookData
 let userData: UserData
