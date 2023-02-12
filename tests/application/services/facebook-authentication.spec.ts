@@ -56,7 +56,7 @@ describe('FacebookAuthenticationService', () => {
     expect(userRepository.getByEmail).toHaveBeenCalledWith({ email: 'anyEmail@email.com' })
   })
 
-  test('should call UserRepository onde and with FacebookUserEntity instance', async () => {
+  test('should call UserRepository once and with FacebookUserEntity instance', async () => {
     const FacebookUserEntityStub = jest.fn().mockImplementationOnce(() => ({
       name: 'Any Facebook Name',
       email: 'anyEmail@email.com',
@@ -86,5 +86,37 @@ describe('FacebookAuthenticationService', () => {
     const accessToken = await sut.execute({ token })
 
     expect(accessToken).toEqual(new AccessToken('any_generated_token'))
+  })
+
+  test('should rethrow if FacebookApi throws', async () => {
+    facebookApi.getUser.mockRejectedValue(new Error())
+
+    const response = sut.execute({ token })
+
+    await expect(response).rejects.toThrow()
+  })
+
+  test('should rethrow if UserRepository.getByEmail throws', async () => {
+    userRepository.getByEmail.mockRejectedValue(new Error())
+
+    const response = sut.execute({ token })
+
+    await expect(response).rejects.toThrow()
+  })
+
+  test('should rethrow if UserRepository.saveWithFacebook throws', async () => {
+    userRepository.saveWithFacebook.mockRejectedValue(new Error())
+
+    const response = sut.execute({ token })
+
+    await expect(response).rejects.toThrow()
+  })
+
+  test('should rethrow if Crypto.generateToken throws', async () => {
+    crypto.generateToken.mockRejectedValue(new Error())
+
+    const response = sut.execute({ token })
+
+    await expect(response).rejects.toThrow()
   })
 })
