@@ -5,6 +5,7 @@ import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { mocked } from 'ts-jest/utils'
+import { TokenGenerator } from '../crypto/token'
 
 jest.mock('@/domain/entities/facebook-user')
 
@@ -16,6 +17,7 @@ const userData = {
 
 let token: string
 let facebookApi: MockProxy<GetFacebookUserApi>
+let crypto: MockProxy<TokenGenerator>
 let sut: FacebookAuthenticationService
 let userRepository: MockProxy<GetUserRepository & SaveUserFromFacebookRepository>
 
@@ -28,8 +30,11 @@ describe('FacebookAuthenticationService', () => {
 
     userRepository = mock()
     userRepository.getByEmail.mockResolvedValue(undefined)
+    userRepository.saveWithFacebook.mockResolvedValue({ id: 'anyId' })
 
-    sut = new FacebookAuthenticationService(facebookApi, userRepository)
+    crypto = mock()
+
+    sut = new FacebookAuthenticationService(facebookApi, userRepository, crypto)
   })
 
   test('should call FacebookApi with correct params', async () => {
@@ -66,5 +71,12 @@ describe('FacebookAuthenticationService', () => {
       email: 'anyEmail@email.com',
       facebookId: 'Any Facebook Id'
     })
+  })
+
+  test('should call Crypto.generateToken with correct values', async () => {
+    await sut.execute({ token })
+
+    expect(crypto.generateToken).toHaveBeenCalledTimes(1)
+    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'anyId' })
   })
 })
