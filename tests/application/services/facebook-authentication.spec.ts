@@ -23,7 +23,7 @@ let sut: FacebookAuthenticationService
 let userRepository: MockProxy<GetUserRepository & SaveUserFromFacebookRepository>
 
 describe('FacebookAuthenticationService', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     token = 'any_token'
 
     facebookApi = mock()
@@ -35,7 +35,9 @@ describe('FacebookAuthenticationService', () => {
 
     crypto = mock()
     crypto.generateToken.mockResolvedValue('any_generated_token')
+  })
 
+  beforeEach(() => {
     sut = new FacebookAuthenticationService(facebookApi, userRepository, crypto)
   })
 
