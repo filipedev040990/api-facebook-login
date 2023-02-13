@@ -1,19 +1,25 @@
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 import { HttpGetClient } from '@/infra/http'
 import { FacebookApi } from '@/infra/apis'
 
 describe('FacebookApi', () => {
-  const clientId = 'any_client_id'
-  const clientSecret = 'any_client_secret'
-
-  const httpClient = mock<HttpGetClient>()
-
+  let clientId: string
+  let clientSecret: string
+  let httpClient: MockProxy<HttpGetClient>
   let sut: FacebookApi
 
-  beforeEach(() => {
-    sut = new FacebookApi(httpClient, clientId, clientSecret)
+  beforeAll(() => {
+    clientId = 'any_client_id'
+    clientSecret = 'any_client_secret'
+    httpClient = mock()
+  })
 
-    httpClient.get.mockResolvedValueOnce({ access_token: 'any_app_token' })
+  beforeEach(() => {
+    httpClient.get
+      .mockResolvedValueOnce({ access_token: 'any_app_token' })
+      .mockResolvedValueOnce({ data: { user_id: 'any_user_facebook_id' } })
+
+    sut = new FacebookApi(httpClient, clientId, clientSecret)
   })
 
   test('should get app token', async () => {
@@ -37,6 +43,18 @@ describe('FacebookApi', () => {
       params: {
         access_token: 'any_app_token',
         input_token: 'any_client_token'
+      }
+    })
+  })
+
+  test('should gets user info', async () => {
+    await sut.getUser({ token: 'any_client_token' })
+
+    expect(httpClient.get).toHaveBeenCalledWith({
+      url: 'https://graph.facebook.com/any_user_facebook_id',
+      params: {
+        fields: 'id,name,email',
+        access_token: 'any_app_token'
       }
     })
   })
