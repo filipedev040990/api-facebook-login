@@ -9,7 +9,7 @@ export class FacebookApi {
     private readonly clientSecret: string
   ) {}
 
-  async getUser (params: GetFacebookUserApi.Input): Promise<void> {
+  async getUser (params: GetFacebookUserApi.Input): Promise<GetFacebookUserApi.Output> {
     const appToken = await this.httpClient.get({
       url: `${this.urlBase}/oauth/access_token`,
       params: {
@@ -27,7 +27,7 @@ export class FacebookApi {
       }
     })
 
-    await this.httpClient.get({
+    const userFacebook = await this.httpClient.get({
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       url: `${this.urlBase}/${debugToken.data.user_id}`,
       params: {
@@ -35,5 +35,11 @@ export class FacebookApi {
         access_token: appToken.access_token
       }
     })
+
+    return {
+      facebookId: userFacebook.id,
+      email: userFacebook.email,
+      name: userFacebook.name
+    }
   }
 }
