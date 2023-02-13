@@ -1,14 +1,9 @@
 export interface HttpGetClient {
-  get: (input: HttpGetClient.Input) => Promise<void>
+  get: (input: HttpGetClient.Input) => Promise<HttpGetClient.Output>
 }
 
 export namespace HttpGetClient {
-  export type Input = {
-    url: string
-    params: {
-      client_id: string
-      client_secret: string
-      grant_type: string
-    }
-  }
+  export type Input = object
+
+  export type Output = any
 }
