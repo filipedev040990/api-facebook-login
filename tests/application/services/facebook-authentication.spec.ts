@@ -34,7 +34,7 @@ describe('FacebookAuthenticationService', () => {
     userRepository.saveWithFacebook.mockResolvedValue({ id: 'anyId' })
 
     crypto = mock()
-    crypto.generateToken.mockReturnValue('any_generated_token')
+    crypto.generateToken.mockResolvedValue('any_generated_token')
   })
 
   beforeEach(() => {
@@ -115,7 +115,7 @@ describe('FacebookAuthenticationService', () => {
   })
 
   test('should rethrow if Crypto.generateToken throws', async () => {
-    crypto.generateToken.mockImplementationOnce(() => { throw new Error() })
+    crypto.generateToken.mockRejectedValue(new Error())
 
     const response = sut.execute({ token })
 
