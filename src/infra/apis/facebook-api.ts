@@ -17,7 +17,7 @@ type UserInfo = {
   email: string
 }
 
-export class FacebookApi {
+export class FacebookApi implements GetFacebookUserApi {
   private readonly urlBase = 'https://graph.facebook.com'
   constructor (
     private readonly httpClient: HttpGetClient,
