@@ -1,34 +1,17 @@
-import { GetUserRepository } from '@/application/contracts/repositories'
-import { IBackup, newDb } from 'pg-mem'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Column, Entity, getConnection, getRepository, PrimaryGeneratedColumn, Repository } from 'typeorm'
+import { User } from '@/infra/database/entities'
+import { UserRepository } from '@/infra/database/repositories'
+import { getConnection, getRepository, Repository } from 'typeorm'
+import { IBackup, IMemoryDb, newDb } from 'pg-mem'
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id!: number
-
-  @Column({ nullable: true})
-  name?: string
-
-  @Column()
-  email!: string
-
-  @Column({ nullable: true })
-  facebookId?: number
-}
-
-export class UserRepository implements GetUserRepository {
-  async getByEmail (input: GetUserRepository.Input): Promise<GetUserRepository.Output> {
-    const repository = getRepository(User)
-    const user = await repository.findOne({ email: input.email })
-    if (user) {
-      return {
-        id: user.id.toString(),
-        name: user.name ?? undefined
-      }
-    }
-  }
+const makeFakeDbConnection = async (entities?: any[]): Promise<IMemoryDb> => {
+  const db = newDb()
+  const connection = await db.adapters.createTypeormConnection({
+    type: 'postgres',
+    entities: entities ?? ['src/infra/database/entities/index.ts']
+  })
+  await connection.synchronize()
+  return db
 }
 
 describe('UserRepository', () => {
@@ -38,12 +21,7 @@ describe('UserRepository', () => {
     let backup: IBackup
 
     beforeAll(async () => {
-      const db = newDb()
-      const connection = await db.adapters.createTypeormConnection({
-        type: 'postgres',
-        entities: [User]
-      })
-      await connection.synchronize()
+      const db = await makeFakeDbConnection()
       backup = db.backup()
 
       userRepository = getRepository(User)
