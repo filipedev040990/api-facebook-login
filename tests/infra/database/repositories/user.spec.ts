@@ -51,5 +51,26 @@ describe('UserRepository', () => {
     const user = await sut.getByEmail({ email: 'anyEmail@email.com' })
 
     expect(user).toEqual({ id: '1' })
+
+    await connection.close()
+  })
+
+  test('should return undefined if email does not exists', async () => {
+    const db = newDb()
+    const connection = await db.adapters.createTypeormConnection({
+      type: 'postgres',
+      entities: [User]
+    })
+
+    // create schema
+    await connection.synchronize()
+
+    const sut = new UserRepository()
+
+    const user = await sut.getByEmail({ email: 'new@email.com' })
+
+    expect(user).toBeUndefined()
+
+    await connection.close()
   })
 })
