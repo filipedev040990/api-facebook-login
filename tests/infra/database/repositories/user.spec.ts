@@ -1,7 +1,7 @@
 import { GetUserRepository } from '@/application/contracts/repositories'
-import { newDb } from 'pg-mem'
+import { IBackup, newDb } from 'pg-mem'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Column, Entity, getRepository, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, getConnection, getRepository, PrimaryGeneratedColumn, Repository } from 'typeorm'
 
 @Entity()
 export class User {
@@ -32,45 +32,42 @@ export class UserRepository implements GetUserRepository {
 }
 
 describe('UserRepository', () => {
-  test('should return an account if email exists', async () => {
-    const db = newDb()
-    const connection = await db.adapters.createTypeormConnection({
-      type: 'postgres',
-      entities: [User]
+  describe('getByEmail', () => {
+    let sut: UserRepository
+    let userRepository: Repository<User>
+    let backup: IBackup
+
+    beforeAll(async () => {
+      const db = newDb()
+      const connection = await db.adapters.createTypeormConnection({
+        type: 'postgres',
+        entities: [User]
+      })
+      await connection.synchronize()
+      backup = db.backup()
+
+      userRepository = getRepository(User)
+    })
+    afterAll(async () => {
+      await getConnection().close()
+    })
+    beforeEach(() => {
+      backup.restore()
+      sut = new UserRepository()
     })
 
-    // create schema
-    await connection.synchronize()
+    test('should return an account if email exists', async () => {
+      await userRepository.save({ email: 'anyEmail@email.com' })
 
-    const userRepository = getRepository(User)
+      const user = await sut.getByEmail({ email: 'anyEmail@email.com' })
 
-    await userRepository.save({ email: 'anyEmail@email.com' })
-
-    const sut = new UserRepository()
-
-    const user = await sut.getByEmail({ email: 'anyEmail@email.com' })
-
-    expect(user).toEqual({ id: '1' })
-
-    await connection.close()
-  })
-
-  test('should return undefined if email does not exists', async () => {
-    const db = newDb()
-    const connection = await db.adapters.createTypeormConnection({
-      type: 'postgres',
-      entities: [User]
+      expect(user).toEqual({ id: '1' })
     })
 
-    // create schema
-    await connection.synchronize()
+    test('should return undefined if email does not exists', async () => {
+      const user = await sut.getByEmail({ email: 'new@email.com' })
 
-    const sut = new UserRepository()
-
-    const user = await sut.getByEmail({ email: 'new@email.com' })
-
-    expect(user).toBeUndefined()
-
-    await connection.close()
+      expect(user).toBeUndefined()
+    })
   })
 })
