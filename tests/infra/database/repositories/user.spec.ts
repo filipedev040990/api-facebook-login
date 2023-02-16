@@ -6,25 +6,24 @@ import { getConnection, getRepository, Repository } from 'typeorm'
 import { IBackup } from 'pg-mem'
 
 describe('UserRepository', () => {
+  let sut: UserRepository
+  let userRepository: Repository<User>
+  let backup: IBackup
+
+  beforeAll(async () => {
+    const db = await makeFakeDbConnection()
+    backup = db.backup()
+
+    userRepository = getRepository(User)
+  })
+  afterAll(async () => {
+    await getConnection().close()
+  })
+  beforeEach(() => {
+    backup.restore()
+    sut = new UserRepository()
+  })
   describe('getByEmail', () => {
-    let sut: UserRepository
-    let userRepository: Repository<User>
-    let backup: IBackup
-
-    beforeAll(async () => {
-      const db = await makeFakeDbConnection()
-      backup = db.backup()
-
-      userRepository = getRepository(User)
-    })
-    afterAll(async () => {
-      await getConnection().close()
-    })
-    beforeEach(() => {
-      backup.restore()
-      sut = new UserRepository()
-    })
-
     test('should return an account if email exists', async () => {
       await userRepository.save({ email: 'anyEmail@email.com' })
 
@@ -38,5 +37,9 @@ describe('UserRepository', () => {
 
       expect(user).toBeUndefined()
     })
+  })
+
+  describe('saveWithFacebook', () => {
+
   })
 })
