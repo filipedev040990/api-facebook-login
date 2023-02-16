@@ -51,5 +51,29 @@ describe('UserRepository', () => {
 
       expect(user?.id).toBe(1)
     })
+
+    test('should update account if email is defined', async () => {
+      await userRepository.save({
+        email: 'anyEmail@email.com',
+        name: 'anyName',
+        facebookId: 'anyFacebookId'
+      })
+
+      await sut.saveWithFacebook({
+        id: '1',
+        email: 'newEmail@email.com',
+        name: 'newName',
+        facebookId: 'newFacebookId'
+      })
+
+      const user = await userRepository.findOne({ email: 'anyEmail@email.com' })
+
+      expect(user).toEqual({
+        id: 1,
+        email: 'anyEmail@email.com',
+        name: 'newName',
+        facebookId: 'newFacebookId'
+      })
+    })
   })
 })

@@ -16,10 +16,19 @@ export class UserRepository implements GetUserRepository {
   }
 
   async saveWithFacebook (input: SaveUserFromFacebookRepository.Input): Promise<void> {
-    await this.repository.save({
-      name: input.name,
-      email: input.email,
-      facebookId: input.facebookId
-    })
+    if (!input.id) {
+      await this.repository.save({
+        name: input.name,
+        email: input.email,
+        facebookId: input.facebookId
+      })
+    } else {
+      await this.repository.update({
+        id: +input.id
+      }, {
+        name: input.name,
+        facebookId: input.facebookId
+      })
+    }
   }
 }
