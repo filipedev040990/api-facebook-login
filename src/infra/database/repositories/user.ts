@@ -2,7 +2,7 @@ import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application
 import { User } from '@/infra/database/entities'
 import { getRepository } from 'typeorm'
 
-export class UserRepository implements GetUserRepository {
+export class UserRepository implements GetUserRepository, SaveUserFromFacebookRepository {
   private readonly repository = getRepository(User)
 
   async getByEmail (input: GetUserRepository.Input): Promise<GetUserRepository.Output> {
@@ -15,14 +15,18 @@ export class UserRepository implements GetUserRepository {
     }
   }
 
-  async saveWithFacebook (input: SaveUserFromFacebookRepository.Input): Promise<void> {
+  async saveWithFacebook (input: SaveUserFromFacebookRepository.Input): Promise<SaveUserFromFacebookRepository.Output> {
+    let id: string
+
     if (!input.id) {
-      await this.repository.save({
+      const user = await this.repository.save({
         name: input.name,
         email: input.email,
         facebookId: input.facebookId
       })
+      id = user.id.toString()
     } else {
+      id = input.id
       await this.repository.update({
         id: +input.id
       }, {
@@ -30,5 +34,7 @@ export class UserRepository implements GetUserRepository {
         facebookId: input.facebookId
       })
     }
+
+    return { id }
   }
 }
