@@ -40,6 +40,16 @@ describe('UserRepository', () => {
   })
 
   describe('saveWithFacebook', () => {
+    test('should create an account if email is undefined', async () => {
+      await sut.saveWithFacebook({
+        email: 'anyEmail@email.com',
+        name: 'anyName',
+        facebookId: 'anyFacebookId'
+      })
 
+      const user = await userRepository.findOne({ email: 'anyEmail@email.com' })
+
+      expect(user?.id).toBe(1)
+    })
   })
 })

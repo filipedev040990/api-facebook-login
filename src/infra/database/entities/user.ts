@@ -13,5 +13,5 @@ export class User {
   email!: string
 
   @Column({ nullable: true })
-  facebookId?: number
+  facebookId?: string
 }
