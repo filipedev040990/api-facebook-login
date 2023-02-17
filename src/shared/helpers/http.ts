@@ -4,3 +4,8 @@ export const badRequest = (error?: Error): HttpResponse => ({
   statusCode: 400,
   body: error ?? 'Invalid request'
 })
+
+export const successRequest = (body?: any): HttpResponse => ({
+  statusCode: 200,
+  body
+})

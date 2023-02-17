@@ -1,26 +1,50 @@
+import { FacebookAuthentication } from '@/domain/features'
 import { MissinParamError } from '@/shared/errors/missin-param'
-import { badRequest } from '@/shared/helpers/http'
+import { badRequest, successRequest } from '@/shared/helpers/http'
+import { HttpRequest, HttpResponse } from '@/shared/types/http'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 class FacebookLoginController {
-  async execute (input: any): Promise<any> {
-    return badRequest(new MissinParamError('token'))
+  constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {}
+
+  async execute (input: HttpRequest): Promise<HttpResponse> {
+    if (!input.body?.token) {
+      return badRequest(new MissinParamError('token'))
+    }
+    await this.facebookAuthenticationService.execute({ token: input.body.token })
+
+    return successRequest({})
   }
 }
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
+  let facebookAuthenticationServiceStub: MockProxy<FacebookAuthentication>
+  let httpRequest: HttpRequest
+
   beforeAll(() => {
-    sut = new FacebookLoginController()
+    facebookAuthenticationServiceStub = mock()
+    sut = new FacebookLoginController(facebookAuthenticationServiceStub)
+  })
+
+  beforeEach(() => {
+    httpRequest = {
+      body: {
+        token: 'token'
+      }
+    }
   })
 
   test('should return 400 if token is empty', async () => {
-    const response = await sut.execute({ token: '' })
+    httpRequest.body.token = ''
+    const response = await sut.execute(httpRequest)
 
     expect(response).toEqual(badRequest(new MissinParamError('token')))
   })
 
   test('should return 400 if token is null', async () => {
-    const response = await sut.execute({ token: null })
+    httpRequest.body.token = null
+    const response = await sut.execute(httpRequest)
 
     expect(response).toEqual(badRequest(new MissinParamError('token')))
   })
@@ -29,5 +53,11 @@ describe('FacebookLoginController', () => {
     const response = await sut.execute({ })
 
     expect(response).toEqual(badRequest(new MissinParamError('token')))
+  })
+
+  test('should call FacebookAuthenticationService once and with correct values', async () => {
+    await sut.execute(httpRequest)
+
+    expect(facebookAuthenticationServiceStub.execute).toHaveBeenCalledWith({ token: 'token' })
   })
 })
