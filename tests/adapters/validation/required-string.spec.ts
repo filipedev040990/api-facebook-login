@@ -7,7 +7,9 @@ export class RequiredStringValidator {
   ) {}
 
   execute (): Error | undefined {
-    return new MissingParamError('any_filed')
+    if (!this.value) {
+      return new MissingParamError(this.fieldName)
+    }
   }
 }
 
@@ -28,5 +30,11 @@ describe('RequiredStringValidator', () => {
     const sut = new RequiredStringValidator(undefined as any, 'any_filed')
 
     expect(sut.execute()).toEqual(new MissingParamError('any_filed'))
+  })
+
+  test('should return undefined if value is not empty', () => {
+    const sut = new RequiredStringValidator('any_value', 'any_filed')
+
+    expect(sut.execute()).toBeUndefined()
   })
 })
