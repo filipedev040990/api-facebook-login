@@ -1,6 +1,6 @@
-import { AuthenticationError, MissingParamError } from '@/shared/errors'
+import { AuthenticationError, MissingParamError, ServerError } from '@/shared/errors'
 import { FacebookAuthentication } from '@/domain/features'
-import { badRequest, successRequest, unauthorized } from '@/shared/helpers/http'
+import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
 import { HttpRequest, HttpResponse } from '@/shared/types/http'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
@@ -9,17 +9,21 @@ class FacebookLoginController {
   constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {}
 
   async execute (input: HttpRequest): Promise<HttpResponse> {
-    if (!input.body?.token) {
-      return badRequest(new MissingParamError('token'))
+    try {
+      if (!input.body?.token) {
+        return badRequest(new MissingParamError('token'))
+      }
+
+      const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
+
+      if (response instanceof AuthenticationError) {
+        return unauthorized(new AuthenticationError())
+      }
+
+      return successRequest(response.value)
+    } catch (error) {
+      return serverError(error)
     }
-
-    const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
-
-    if (response instanceof AuthenticationError) {
-      return unauthorized(new AuthenticationError())
-    }
-
-    return successRequest(response.value)
   }
 }
 
@@ -35,6 +39,7 @@ describe('FacebookLoginController', () => {
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
     httpRequest = {
       body: {
         token: 'token'
@@ -46,20 +51,29 @@ describe('FacebookLoginController', () => {
     httpRequest.body.token = ''
     const response = await sut.execute(httpRequest)
 
-    expect(response).toEqual(badRequest(new MissingParamError('token')))
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new MissingParamError('token')
+    })
   })
 
   test('should return 400 if token is null', async () => {
     httpRequest.body.token = null
     const response = await sut.execute(httpRequest)
 
-    expect(response).toEqual(badRequest(new MissingParamError('token')))
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new MissingParamError('token')
+    })
   })
 
   test('should return 400 if token is undefined', async () => {
     const response = await sut.execute({ })
 
-    expect(response).toEqual(badRequest(new MissingParamError('token')))
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new MissingParamError('token')
+    })
   })
 
   test('should call FacebookAuthenticationService once and with correct values', async () => {
@@ -73,12 +87,30 @@ describe('FacebookLoginController', () => {
 
     const response = await sut.execute(httpRequest)
 
-    expect(response).toEqual(unauthorized(new AuthenticationError()))
+    expect(response).toEqual({
+      statusCode: 401,
+      body: new AuthenticationError()
+    })
   })
 
   test('should return 200 and token if authentication succeeds', async () => {
     const response = await sut.execute(httpRequest)
 
-    expect(response).toEqual(successRequest('accessToken'))
+    expect(response).toEqual({
+      statusCode: 200,
+      body: 'accessToken'
+    })
+  })
+
+  test('should return 500 if FacebookAuthenticationService throws', async () => {
+    const error = new Error()
+    facebookAuthenticationServiceStub.execute.mockRejectedValueOnce(error)
+
+    const response = await sut.execute(httpRequest)
+
+    expect(response).toEqual({
+      statusCode: 500,
+      body: new ServerError(error)
+    })
   })
 })
