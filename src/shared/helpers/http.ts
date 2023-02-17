@@ -1,9 +1,9 @@
 import { HttpResponse } from '@/shared/types/http'
 import { ServerError } from '../errors'
 
-export const badRequest = (error?: Error): HttpResponse => ({
+export const badRequest = (error: Error): HttpResponse => ({
   statusCode: 400,
-  body: error ?? 'Invalid request'
+  body: error
 })
 
 export const successRequest = (body?: any): HttpResponse => ({
@@ -11,9 +11,9 @@ export const successRequest = (body?: any): HttpResponse => ({
   body
 })
 
-export const unauthorized = (error?: Error): HttpResponse => ({
+export const unauthorized = (error: Error): HttpResponse => ({
   statusCode: 401,
-  body: error ?? 'Unauthorized'
+  body: error
 })
 
 export const serverError = (error: unknown): HttpResponse => ({

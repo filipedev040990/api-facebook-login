@@ -113,4 +113,15 @@ describe('FacebookLoginController', () => {
       body: new ServerError(error)
     })
   })
+
+  test('should return 500 if FacebookAuthenticationService throws without error', async () => {
+    facebookAuthenticationServiceStub.execute.mockRejectedValueOnce('server_error')
+
+    const response = await sut.execute(httpRequest)
+
+    expect(response).toEqual({
+      statusCode: 500,
+      body: new ServerError()
+    })
+  })
 })
