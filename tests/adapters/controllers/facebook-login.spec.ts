@@ -1,31 +1,9 @@
 import { AuthenticationError, MissingParamError, ServerError } from '@/shared/errors'
 import { FacebookAuthentication } from '@/domain/features'
-import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
-import { HttpRequest, HttpResponse } from '@/shared/types/http'
+import { HttpRequest } from '@/shared/types/http'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
-
-class FacebookLoginController {
-  constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {}
-
-  async execute (input: HttpRequest): Promise<HttpResponse> {
-    try {
-      if (!input.body?.token) {
-        return badRequest(new MissingParamError('token'))
-      }
-
-      const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
-
-      if (response instanceof AuthenticationError) {
-        return unauthorized(new AuthenticationError())
-      }
-
-      return successRequest(response.value)
-    } catch (error) {
-      return serverError(error)
-    }
-  }
-}
+import { FacebookLoginController } from '@/adapters/controllers'
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
