@@ -2,12 +2,12 @@ import { AuthenticationError, MissingParamError, ServerError } from '@/shared/er
 import { FacebookAuthentication } from '@/domain/features'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
-import { FacebookLoginController, HttpRequest } from '@/adapters/controllers'
+import { FacebookLoginController, Input } from '@/adapters/controllers'
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
   let facebookAuthenticationServiceStub: MockProxy<FacebookAuthentication>
-  let httpRequest: HttpRequest
+  let httpRequest: Input
 
   beforeAll(() => {
     facebookAuthenticationServiceStub = mock()
@@ -35,7 +35,7 @@ describe('FacebookLoginController', () => {
   })
 
   test('should return 400 if token is null', async () => {
-    httpRequest.body.token = null
+    httpRequest.body.token = null as any
     const response = await sut.execute(httpRequest)
 
     expect(response).toEqual({
@@ -45,7 +45,7 @@ describe('FacebookLoginController', () => {
   })
 
   test('should return 400 if token is undefined', async () => {
-    httpRequest.body.token = undefined
+    httpRequest.body.token = undefined as any
     const response = await sut.execute(httpRequest)
 
     expect(response).toEqual({

@@ -3,9 +3,9 @@ import { AuthenticationError, MissingParamError } from '@/shared/errors'
 import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
 import { HttpResponse } from '@/shared/types'
 
-export type HttpRequest = {
+export type Input = {
   body: {
-    token: string | undefined | null
+    token: string
   }
 }
 
@@ -16,12 +16,12 @@ type Output = Error | {
 export class FacebookLoginController {
   constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {}
 
-  async execute (input: HttpRequest): Promise<HttpResponse<Output>> {
+  async execute (input: Input): Promise<HttpResponse<Output>> {
     try {
-      if (!input.body?.token) {
-        return badRequest(new MissingParamError('token'))
+      const error = this.validate(input)
+      if (error) {
+        return badRequest(error)
       }
-
       const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
 
       if (response instanceof AuthenticationError) {
@@ -31,6 +31,12 @@ export class FacebookLoginController {
       return successRequest({ accessToken: response.value })
     } catch (error) {
       return serverError(error)
+    }
+  }
+
+  private validate (input: Input): Error | undefined {
+    if (!input.body?.token) {
+      return new MissingParamError('token')
     }
   }
 }
