@@ -8,9 +8,12 @@ class FacebookLoginController {
 }
 
 describe('FacebookLoginController', () => {
-  test('should return 400 if token is empty', async () => {
-    const sut = new FacebookLoginController()
+  let sut: FacebookLoginController
+  beforeAll(() => {
+    sut = new FacebookLoginController()
+  })
 
+  test('should return 400 if token is empty', async () => {
     const response = await sut.execute({ token: '' })
 
     expect(response).toEqual(badRequest(new MissinParamError('token')))
