@@ -1,7 +1,8 @@
 import { FacebookAuthentication } from '@/domain/features'
-import { AuthenticationError, MissingParamError } from '@/shared/errors'
+import { AuthenticationError } from '@/shared/errors'
 import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
 import { HttpResponse } from '@/shared/types'
+import { RequiredStringValidator } from '../validation'
 
 export type Input = {
   body: {
@@ -35,8 +36,7 @@ export class FacebookLoginController {
   }
 
   private validate (input: Input): Error | undefined {
-    if (!input.body?.token) {
-      return new MissingParamError('token')
-    }
+    const validator = new RequiredStringValidator(input.body?.token, 'token')
+    return validator.execute()
   }
 }
