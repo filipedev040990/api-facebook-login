@@ -1,9 +1,8 @@
 import { AuthenticationError, MissingParamError, ServerError } from '@/shared/errors'
 import { FacebookAuthentication } from '@/domain/features'
-import { HttpRequest } from '@/shared/types/http'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
-import { FacebookLoginController } from '@/adapters/controllers'
+import { FacebookLoginController, HttpRequest } from '@/adapters/controllers'
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
@@ -46,7 +45,8 @@ describe('FacebookLoginController', () => {
   })
 
   test('should return 400 if token is undefined', async () => {
-    const response = await sut.execute({ })
+    httpRequest.body.token = undefined
+    const response = await sut.execute(httpRequest)
 
     expect(response).toEqual({
       statusCode: 400,
@@ -76,7 +76,9 @@ describe('FacebookLoginController', () => {
 
     expect(response).toEqual({
       statusCode: 200,
-      body: 'accessToken'
+      body: {
+        accessToken: 'accessToken'
+      }
     })
   })
 
