@@ -9,3 +9,8 @@ export const successRequest = (body?: any): HttpResponse => ({
   statusCode: 200,
   body
 })
+
+export const unauthorized = (error?: Error): HttpResponse => ({
+  statusCode: 401,
+  body: error ?? 'Unauthorized'
+})
