@@ -1,8 +1,12 @@
-import { AuthenticationError, MissingParamError, ServerError } from '@/shared/errors'
+import { AuthenticationError, ServerError } from '@/shared/errors'
 import { FacebookAuthentication } from '@/domain/features'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
 import { FacebookLoginController, Input } from '@/adapters/controllers'
+import { mocked } from 'ts-jest/utils'
+import { RequiredStringValidator } from '@/adapters/validation'
+
+jest.mock('@/adapters/validation/required-string')
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
@@ -24,33 +28,21 @@ describe('FacebookLoginController', () => {
     }
   })
 
-  test('should return 400 if token is empty', async () => {
-    httpRequest.body.token = ''
+  test('should return 400 if validation fails', async () => {
+    const error = new Error('validaton_error')
+
+    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+      execute: jest.fn().mockReturnValueOnce(error)
+    }))
+
+    mocked(RequiredStringValidator).mockImplementationOnce(RequiredStringValidatorSpy)
+
     const response = await sut.execute(httpRequest)
 
+    expect(RequiredStringValidator).toHaveBeenCalledWith('token', 'token')
     expect(response).toEqual({
       statusCode: 400,
-      body: new MissingParamError('token')
-    })
-  })
-
-  test('should return 400 if token is null', async () => {
-    httpRequest.body.token = null as any
-    const response = await sut.execute(httpRequest)
-
-    expect(response).toEqual({
-      statusCode: 400,
-      body: new MissingParamError('token')
-    })
-  })
-
-  test('should return 400 if token is undefined', async () => {
-    httpRequest.body.token = undefined as any
-    const response = await sut.execute(httpRequest)
-
-    expect(response).toEqual({
-      statusCode: 400,
-      body: new MissingParamError('token')
+      body: error
     })
   })
 
