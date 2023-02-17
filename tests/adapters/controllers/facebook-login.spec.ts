@@ -18,4 +18,16 @@ describe('FacebookLoginController', () => {
 
     expect(response).toEqual(badRequest(new MissinParamError('token')))
   })
+
+  test('should return 400 if token is null', async () => {
+    const response = await sut.execute({ token: null })
+
+    expect(response).toEqual(badRequest(new MissinParamError('token')))
+  })
+
+  test('should return 400 if token is undefined', async () => {
+    const response = await sut.execute({ })
+
+    expect(response).toEqual(badRequest(new MissinParamError('token')))
+  })
 })
