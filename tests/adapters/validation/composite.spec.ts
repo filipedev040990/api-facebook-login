@@ -46,4 +46,10 @@ describe('ValidationComposite', () => {
 
     expect(sut.execute()).toEqual(new Error('error_validator1'))
   })
+
+  test('should return the error', () => {
+    validator2.execute.mockReturnValueOnce(new Error('error_validator2'))
+
+    expect(sut.execute()).toEqual(new Error('error_validator2'))
+  })
 })
