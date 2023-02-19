@@ -4,9 +4,9 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
 import { FacebookLoginController, Input } from '@/adapters/controllers'
 import { mocked } from 'ts-jest/utils'
-import { RequiredStringValidator } from '@/adapters/validation'
+import { RequiredStringValidator, ValidationComposite } from '@/adapters/validation'
 
-jest.mock('@/adapters/validation/required-string')
+jest.mock('@/adapters/validation/composite')
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
@@ -31,15 +31,17 @@ describe('FacebookLoginController', () => {
   test('should return 400 if validation fails', async () => {
     const error = new Error('validaton_error')
 
-    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
       execute: jest.fn().mockReturnValueOnce(error)
     }))
 
-    mocked(RequiredStringValidator).mockImplementationOnce(RequiredStringValidatorSpy)
+    mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
 
     const response = await sut.execute(httpRequest)
 
-    expect(RequiredStringValidator).toHaveBeenCalledWith('token', 'token')
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new RequiredStringValidator('token', 'token')
+    ])
     expect(response).toEqual({
       statusCode: 400,
       body: error
