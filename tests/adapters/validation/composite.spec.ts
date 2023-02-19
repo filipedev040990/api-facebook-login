@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 export class ValidationComposite {
   constructor (private readonly validators: Validator []) {}
@@ -12,17 +12,25 @@ export interface Validator {
 }
 
 describe('ValidationComposite', () => {
-  test('should return undefined if all validators returns undefined', () => {
-    const validator1 = mock<Validator>()
+  let validator1: MockProxy<Validator>
+  let validator2: MockProxy<Validator>
+  let validators: Validator []
+  let sut: ValidationComposite
+
+  beforeAll(() => {
+    validator1 = mock()
     validator1.execute.mockReturnValueOnce(undefined)
 
-    const validator2 = mock<Validator>()
+    validator2 = mock()
     validator2.execute.mockReturnValueOnce(undefined)
+  })
 
-    const validators: Validator [] = [validator1, validator2]
+  beforeEach(() => {
+    validators = [validator1, validator2]
+    sut = new ValidationComposite(validators)
+  })
 
-    const sut = new ValidationComposite(validators)
-
+  test('should return undefined if all validators returns undefined', () => {
     expect(sut.execute()).toBeUndefined()
   })
 })
