@@ -1,8 +1,14 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 
-export class ValidationComposite {
+export class ValidationComposite implements Validator {
   constructor (private readonly validators: Validator []) {}
-  execute (): undefined {
+  execute (): Error | undefined {
+    for (const validator of this.validators) {
+      const error = validator.execute()
+      if (error) {
+        return error
+      }
+    }
     return undefined
   }
 }
@@ -19,10 +25,10 @@ describe('ValidationComposite', () => {
 
   beforeAll(() => {
     validator1 = mock()
-    validator1.execute.mockReturnValueOnce(undefined)
+    validator1.execute.mockReturnValue(undefined)
 
     validator2 = mock()
-    validator2.execute.mockReturnValueOnce(undefined)
+    validator2.execute.mockReturnValue(undefined)
   })
 
   beforeEach(() => {
@@ -32,5 +38,12 @@ describe('ValidationComposite', () => {
 
   test('should return undefined if all validators returns undefined', () => {
     expect(sut.execute()).toBeUndefined()
+  })
+
+  test('should return the first error', () => {
+    validator1.execute.mockReturnValueOnce(new Error('error_validator1'))
+    validator2.execute.mockReturnValueOnce(new Error('error_validator2'))
+
+    expect(sut.execute()).toEqual(new Error('error_validator1'))
   })
 })
