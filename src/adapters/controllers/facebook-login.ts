@@ -2,7 +2,7 @@ import { FacebookAuthentication } from '@/domain/features'
 import { AuthenticationError } from '@/shared/errors'
 import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
 import { HttpResponse } from '@/shared/types'
-import { RequiredStringValidator, ValidationComposite } from '../validation'
+import { ValidationBuilder, ValidationComposite } from '../validation'
 
 export type Input = {
   body: {
@@ -37,7 +37,7 @@ export class FacebookLoginController {
 
   private validate (input: Input): Error | undefined {
     return new ValidationComposite([
-      new RequiredStringValidator(input.body?.token, 'token')
+      ...ValidationBuilder.of({ value: input.body?.token, fieldName: 'token' }).required().build()
     ]).execute()
   }
 }
