@@ -4,7 +4,7 @@ import { AuthenticationError } from '@/shared/errors'
 import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { mocked } from 'ts-jest/utils'
+import { mocked } from 'jest-mock'
 import { TokenGenerator } from '../contracts/crypto/token'
 import { AccessToken } from '@/domain/entities'
 

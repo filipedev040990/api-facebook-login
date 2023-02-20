@@ -1,6 +1,6 @@
 import { ServerError } from '@/shared/errors'
 import { Controller } from '@/adapters/controllers'
-import { mocked } from 'ts-jest/utils'
+import { mocked } from 'jest-mock'
 import { ValidationComposite } from '@/adapters/validation'
 import { HttpResponse } from '@/shared/types'
 
