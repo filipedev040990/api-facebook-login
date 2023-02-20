@@ -1,8 +1,9 @@
+import { Controller } from '@/adapters/controllers'
 import { FacebookAuthentication } from '@/domain/features'
 import { AuthenticationError } from '@/shared/errors'
-import { badRequest, serverError, successRequest, unauthorized } from '@/shared/helpers/http'
+import { successRequest, unauthorized } from '@/shared/helpers/http'
 import { HttpResponse } from '@/shared/types'
-import { ValidationBuilder, ValidationComposite } from '../validation'
+import { ValidationBuilder, Validator } from '@/adapters/validation'
 
 export type Input = {
   body: {
@@ -14,30 +15,21 @@ type Output = Error | {
   accessToken: string
 }
 
-export class FacebookLoginController {
-  constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {}
-
-  async execute (input: Input): Promise<HttpResponse<Output>> {
-    try {
-      const error = this.validate(input)
-      if (error) {
-        return badRequest(error)
-      }
-      const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
-
-      if (response instanceof AuthenticationError) {
-        return unauthorized(new AuthenticationError())
-      }
-
-      return successRequest({ accessToken: response.value })
-    } catch (error) {
-      return serverError(error)
-    }
+export class FacebookLoginController extends Controller {
+  constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {
+    super()
   }
 
-  private validate (input: Input): Error | undefined {
-    return new ValidationComposite([
+  async execute (input: Input): Promise<HttpResponse<Output>> {
+    const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
+    return response instanceof AuthenticationError
+      ? unauthorized(new AuthenticationError())
+      : successRequest({ accessToken: response.value })
+  }
+
+  override buildValidators (input: Input): Validator [] {
+    return [
       ...ValidationBuilder.of({ value: input.body?.token, fieldName: 'token' }).required().build()
-    ]).execute()
+    ]
   }
 }
