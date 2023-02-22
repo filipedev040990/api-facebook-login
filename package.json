@@ -4,7 +4,7 @@
   "description": "Projeto de autenticação com facebook",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config dist/main",
+    "start": "node dist/infra/http/server.js",
     "dev": "ts-node-dev --respawn --transpile-only --clear -r dotenv/config --inspect=0.0.0.0:9229 src/main",
     "clean": "rimraf dist",
     "build": "npm run clean && tsc -p tsconfig-build.json",
@@ -67,5 +67,8 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }
