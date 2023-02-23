@@ -10,8 +10,8 @@ export const expressAdapteRouter = (controller: Controller): RequestHandler => {
 
     const httpResponse: HttpResponse = await controller.execute(httpRequest)
 
-    const bodyResponse = httpResponse.statusCode === 500
-      ? { error: httpResponse.body.error }
+    const bodyResponse = httpResponse.statusCode >= 400
+      ? { error: httpResponse.body.message }
       : httpResponse.body
 
     res.status(httpResponse.statusCode).json(bodyResponse)
