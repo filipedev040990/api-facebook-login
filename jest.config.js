@@ -4,7 +4,10 @@ module.exports = {
     '!<rootDir>/src/main/**',
     '!<rootDir>/src/shared/**',
     '!<rootDir>/src/infra/factories/**',
-    '!<rootDir>/src/**/index.ts'
+    '!<rootDir>/src/**/index.ts',
+    '!<rootDir>/src/**/app.ts',
+    '!<rootDir>/src/**/server.ts',
+    '!<rootDir>/src/**/routes.ts'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',

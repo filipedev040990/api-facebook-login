@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { adaptRoute } from '../adapters/express-route-adapter'
+import { expressAdapteRouter } from '../adapters/express-route'
 import { makeFacebookLoginController } from '../factories/controllers/facebook-login'
 
 const router = Router()
 
-router.post('/login/facebook', adaptRoute(makeFacebookLoginController()))
+router.post('/login/facebook', expressAdapteRouter(makeFacebookLoginController()))
 
 export { router }
