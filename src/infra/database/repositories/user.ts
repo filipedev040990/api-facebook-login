@@ -5,8 +5,8 @@ import { getRepository } from 'typeorm'
 export class UserRepository implements GetUserRepository, SaveUserFromFacebookRepository {
   private readonly repository = getRepository(User)
 
-  async getByEmail (input: GetUserRepository.Input): Promise<GetUserRepository.Output> {
-    const user = await this.repository.findOne({ email: input.email })
+  async getByEmail ({ email }: GetUserRepository.Input): Promise<GetUserRepository.Output> {
+    const user = await this.repository.findOne({ email })
     if (user) {
       return {
         id: user.id.toString(),
@@ -15,26 +15,17 @@ export class UserRepository implements GetUserRepository, SaveUserFromFacebookRe
     }
   }
 
-  async saveWithFacebook (input: SaveUserFromFacebookRepository.Input): Promise<SaveUserFromFacebookRepository.Output> {
-    let id: string
+  async saveWithFacebook ({ id, name, email, facebookId }: SaveUserFromFacebookRepository.Input): Promise<SaveUserFromFacebookRepository.Output> {
+    let resultId: string
 
-    if (!input.id) {
-      const user = await this.repository.save({
-        name: input.name,
-        email: input.email,
-        facebookId: input.facebookId
-      })
-      id = user.id.toString()
+    if (!id) {
+      const user = await this.repository.save({ name, email, facebookId })
+      resultId = user.id.toString()
     } else {
-      id = input.id
-      await this.repository.update({
-        id: +input.id
-      }, {
-        name: input.name,
-        facebookId: input.facebookId
-      })
+      resultId = id
+      await this.repository.update({ id: +id }, { name, facebookId })
     }
 
-    return { id }
+    return { id: resultId }
   }
 }

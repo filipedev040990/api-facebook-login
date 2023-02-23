@@ -17,6 +17,9 @@ type UserInfo = {
   email: string
 }
 
+type Input = GetFacebookUserApi.Input
+type Output = GetFacebookUserApi.Output
+
 export class FacebookApi implements GetFacebookUserApi {
   private readonly urlBase = 'https://graph.facebook.com'
   constructor (
@@ -25,8 +28,8 @@ export class FacebookApi implements GetFacebookUserApi {
     private readonly clientSecret: string
   ) {}
 
-  async getUser (params: GetFacebookUserApi.Input): Promise<GetFacebookUserApi.Output> {
-    return this.getUserInfo(params.token)
+  async getUser ({ token }: Input): Promise<Output> {
+    return this.getUserInfo(token)
       .then(({ id, email, name }) => ({ facebookId: id, email, name }))
       .catch(() => undefined)
   }
