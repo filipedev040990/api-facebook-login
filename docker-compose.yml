@@ -1,0 +1,37 @@
+version: '3.5'
+
+services:
+  api-login-facebook:
+    container_name: 'api-login-facebook'
+    image: node:16
+    restart: always
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dist/:/app/dist/
+      - ./package.json:/app/package.json
+    command: bash -c "npm install --omit=dev && npm run start"
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres:/data/postgres
+
+volumes:
+  postgres:
+  pgadmin:
+
+
+networks:
+  default:
+    name: local
