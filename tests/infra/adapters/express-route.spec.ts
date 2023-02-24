@@ -27,7 +27,7 @@ describe('expressAdapteRouter', () => {
     await sut(req, res, next)
 
     expect(controller.execute).toHaveBeenCalledTimes(1)
-    expect(controller.execute).toHaveBeenCalledWith({ any: 'any' })
+    expect(controller.execute).toHaveBeenCalledWith(req)
   })
 
   test('should respond with 200 and correct data', async () => {

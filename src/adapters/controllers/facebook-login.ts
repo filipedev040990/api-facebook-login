@@ -21,7 +21,7 @@ export class FacebookLoginController extends Controller {
   }
 
   async execute (input: Input): Promise<HttpResponse<Output>> {
-    const response = await this.facebookAuthenticationService.execute({ token: input.body.token })
+    const response = await this.facebookAuthenticationService.execute({ token: input?.body.token })
     return response instanceof AuthenticationError
       ? unauthorized(new AuthenticationError())
       : successRequest({ accessToken: response.value })
