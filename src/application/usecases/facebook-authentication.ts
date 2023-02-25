@@ -1,5 +1,5 @@
 import { GetFacebookUserApi } from '@/application/contracts/apis'
-import { FacebookAuthentication } from '@/domain/features'
+import { FacebookAuthentication } from '@/domain/contracts'
 import { SaveUserFromFacebookRepository, GetUserRepository } from '@/application/contracts/repositories'
 import { FacebookUserEntity, AccessToken } from '@/domain/entities'
 import { TokenGenerator } from '@/application/contracts/crypto/token'

@@ -1,5 +1,5 @@
 import { AuthenticationError } from '@/application/shared/errors'
-import { FacebookAuthentication } from '@/domain/features'
+import { FacebookAuthentication } from '@/domain/contracts'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'
 import { FacebookLoginController, Input } from '@/adapters/controllers'

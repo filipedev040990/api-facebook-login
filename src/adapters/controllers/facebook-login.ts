@@ -1,5 +1,5 @@
 import { Controller } from '@/adapters/controllers'
-import { FacebookAuthentication } from '@/domain/features'
+import { FacebookAuthentication } from '@/domain/contracts'
 import { AuthenticationError } from '@/application/shared/errors'
 import { successRequest, unauthorized } from '@/application/shared/helpers/http'
 import { HttpResponse } from '@/application/shared/types'
