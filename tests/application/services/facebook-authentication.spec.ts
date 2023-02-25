@@ -1,6 +1,6 @@
 import { FacebookAuthenticationService } from '@/application/services'
 import { GetFacebookUserApi } from '@/application/contracts/apis'
-import { AuthenticationError } from '@/shared/errors'
+import { AuthenticationError } from '@/application/shared/errors'
 import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'

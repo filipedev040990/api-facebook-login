@@ -1,8 +1,8 @@
 import { Controller } from '@/adapters/controllers'
 import { FacebookAuthentication } from '@/domain/features'
-import { AuthenticationError } from '@/shared/errors'
-import { successRequest, unauthorized } from '@/shared/helpers/http'
-import { HttpResponse } from '@/shared/types'
+import { AuthenticationError } from '@/application/shared/errors'
+import { successRequest, unauthorized } from '@/application/shared/helpers/http'
+import { HttpResponse } from '@/application/shared/types'
 import { ValidationBuilder, Validator } from '@/adapters/validation'
 
 export type Input = {

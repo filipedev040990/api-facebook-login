@@ -1,5 +1,5 @@
-import { badRequest, serverError } from '@/shared/helpers/http'
-import { HttpResponse } from '@/shared/types'
+import { badRequest, serverError } from '@/application/shared/helpers/http'
+import { HttpResponse } from '@/application/shared/types'
 import { ValidationComposite, Validator } from '@/adapters/validation'
 
 export abstract class Controller {

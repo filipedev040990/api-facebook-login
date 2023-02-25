@@ -1,4 +1,4 @@
-import { HttpResponse } from '@/shared/types'
+import { HttpResponse } from '@/application/shared/types'
 import { ServerError } from '../errors'
 
 export const badRequest = (error: Error): HttpResponse => ({

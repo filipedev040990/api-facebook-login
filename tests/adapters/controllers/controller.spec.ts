@@ -1,8 +1,8 @@
-import { ServerError } from '@/shared/errors'
+import { ServerError } from '@/application/shared/errors'
 import { Controller } from '@/adapters/controllers'
 import { mocked } from 'jest-mock'
 import { ValidationComposite } from '@/adapters/validation'
-import { HttpResponse } from '@/shared/types'
+import { HttpResponse } from '@/application/shared/types'
 
 jest.mock('@/adapters/validation/composite')
 

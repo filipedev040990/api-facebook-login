@@ -1,4 +1,4 @@
-import { MissingParamError } from '@/shared/errors'
+import { MissingParamError } from '@/application/shared/errors'
 
 export class RequiredStringValidator {
   constructor (

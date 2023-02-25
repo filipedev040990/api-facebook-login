@@ -1,4 +1,4 @@
-import { AuthenticationError } from '@/shared/errors'
+import { AuthenticationError } from '@/application/shared/errors'
 import { FacebookAuthentication } from '@/domain/features'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { AccessToken } from '@/domain/entities'

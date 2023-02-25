@@ -1,5 +1,5 @@
 import { RequiredStringValidator } from '@/adapters/validation'
-import { MissingParamError } from '@/shared/errors'
+import { MissingParamError } from '@/application/shared/errors'
 
 describe('RequiredStringValidator', () => {
   test('should return RequiredFieldError if value is empty', () => {

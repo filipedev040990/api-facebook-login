@@ -1,5 +1,5 @@
 import { Controller } from '@/adapters/controllers'
-import { HttpResponse } from '@/shared/types'
+import { HttpResponse } from '@/application/shared/types'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 
 export const expressAdapteRouter = (controller: Controller): RequestHandler => {

@@ -3,7 +3,7 @@ import { FacebookAuthentication } from '@/domain/features'
 import { SaveUserFromFacebookRepository, GetUserRepository } from '@/application/contracts/repositories'
 import { FacebookUserEntity, AccessToken } from '@/domain/entities'
 import { TokenGenerator } from '@/application/contracts/crypto/token'
-import { AuthenticationError } from '@/shared/errors'
+import { AuthenticationError } from '@/application/shared/errors'
 
 export class FacebookAuthenticationService implements FacebookAuthentication {
   constructor (
