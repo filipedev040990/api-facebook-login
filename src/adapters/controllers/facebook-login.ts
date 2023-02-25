@@ -16,12 +16,12 @@ type Output = Error | {
 }
 
 export class FacebookLoginController extends Controller {
-  constructor (private readonly facebookAuthenticationService: FacebookAuthentication) {
+  constructor (private readonly facebookAuthenticationUseCase: FacebookAuthentication) {
     super()
   }
 
   async execute (input: Input): Promise<HttpResponse<Output>> {
-    const response = await this.facebookAuthenticationService.execute({ token: input?.body.token })
+    const response = await this.facebookAuthenticationUseCase.execute({ token: input?.body.token })
     return response instanceof AuthenticationError
       ? unauthorized(new AuthenticationError())
       : successRequest({ accessToken: response.value })

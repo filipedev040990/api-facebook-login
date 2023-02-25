@@ -1,4 +1,4 @@
-import { FacebookAuthenticationService } from '@/application/services'
+import { FacebookAuthenticationUseCase } from '@/application/usecases'
 import { GetFacebookUserApi } from '@/application/contracts/apis'
 import { AuthenticationError } from '@/application/shared/errors'
 import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
@@ -18,11 +18,11 @@ const userData = {
 
 let facebookApi: MockProxy<GetFacebookUserApi>
 let crypto: MockProxy<TokenGenerator>
-let sut: FacebookAuthenticationService
+let sut: FacebookAuthenticationUseCase
 let userRepository: MockProxy<GetUserRepository & SaveUserFromFacebookRepository>
 let token: string
 
-describe('FacebookAuthenticationService', () => {
+describe('FacebookAuthenticationUseCase', () => {
   beforeAll(() => {
     token = 'any_token'
 
@@ -38,7 +38,7 @@ describe('FacebookAuthenticationService', () => {
   })
 
   beforeEach(() => {
-    sut = new FacebookAuthenticationService(facebookApi, userRepository, crypto)
+    sut = new FacebookAuthenticationUseCase(facebookApi, userRepository, crypto)
   })
 
   test('should call FacebookApi with correct params', async () => {

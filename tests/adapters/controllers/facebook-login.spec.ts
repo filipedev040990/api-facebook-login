@@ -7,13 +7,13 @@ import { RequiredStringValidator } from '@/adapters/validation'
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
-  let facebookAuthenticationServiceStub: MockProxy<FacebookAuthentication>
+  let facebookAuthenticationUseCaseStub: MockProxy<FacebookAuthentication>
   let httpRequest: Input
 
   beforeAll(() => {
-    facebookAuthenticationServiceStub = mock()
-    facebookAuthenticationServiceStub.execute.mockResolvedValue(new AccessToken('accessToken'))
-    sut = new FacebookLoginController(facebookAuthenticationServiceStub)
+    facebookAuthenticationUseCaseStub = mock()
+    facebookAuthenticationUseCaseStub.execute.mockResolvedValue(new AccessToken('accessToken'))
+    sut = new FacebookLoginController(facebookAuthenticationUseCaseStub)
   })
 
   beforeEach(() => {
@@ -33,14 +33,14 @@ describe('FacebookLoginController', () => {
     ])
   })
 
-  test('should call FacebookAuthenticationService once and with correct values', async () => {
+  test('should call FacebookAuthenticationUseCase once and with correct values', async () => {
     await sut.execute(httpRequest)
 
-    expect(facebookAuthenticationServiceStub.execute).toHaveBeenCalledWith({ token: 'token' })
+    expect(facebookAuthenticationUseCaseStub.execute).toHaveBeenCalledWith({ token: 'token' })
   })
 
   test('should return 401 if authentication fails', async () => {
-    facebookAuthenticationServiceStub.execute.mockResolvedValueOnce(new AuthenticationError())
+    facebookAuthenticationUseCaseStub.execute.mockResolvedValueOnce(new AuthenticationError())
 
     const response = await sut.execute(httpRequest)
 
