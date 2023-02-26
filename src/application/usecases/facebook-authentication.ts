@@ -18,10 +18,10 @@ export class FacebookAuthenticationUseCase implements FacebookAuthentication {
       const userExistsData = await this.userRepository.getByEmail({ email: facebookData.email })
       const facebookUser = new FacebookUserEntity(facebookData, userExistsData)
       const userId = await this.userRepository.saveWithFacebook(facebookUser)
-      const token = await this.crypto.generateToken({ key: userId.id, expirationInMs: AccessToken.expirationInMs })
-      return new AccessToken(token)
+      const accessToken = await this.crypto.generateToken({ key: userId.id, expirationInMs: AccessToken.expirationInMs })
+      return { accessToken }
     }
 
-    return new AuthenticationError()
+    throw new AuthenticationError()
   }
 }

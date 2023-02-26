@@ -1,7 +1,6 @@
 import { AuthenticationError } from '@/application/shared/errors'
 import { FacebookAuthentication } from '@/domain/contracts'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { AccessToken } from '@/domain/entities'
 import { FacebookLoginController, Input } from '@/adapters/controllers'
 import { RequiredStringValidator } from '@/adapters/validation'
 
@@ -12,7 +11,7 @@ describe('FacebookLoginController', () => {
 
   beforeAll(() => {
     facebookAuthenticationUseCaseStub = mock()
-    facebookAuthenticationUseCaseStub.execute.mockResolvedValue(new AccessToken('accessToken'))
+    facebookAuthenticationUseCaseStub.execute.mockResolvedValue({ accessToken: 'accessToken' })
     sut = new FacebookLoginController(facebookAuthenticationUseCaseStub)
   })
 
@@ -40,7 +39,9 @@ describe('FacebookLoginController', () => {
   })
 
   test('should return 401 if authentication fails', async () => {
-    facebookAuthenticationUseCaseStub.execute.mockResolvedValueOnce(new AuthenticationError())
+    facebookAuthenticationUseCaseStub.execute.mockImplementationOnce(() => {
+      throw new AuthenticationError()
+    })
 
     const response = await sut.execute(httpRequest)
 

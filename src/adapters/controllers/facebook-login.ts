@@ -21,10 +21,16 @@ export class FacebookLoginController extends Controller {
   }
 
   async execute (input: Input): Promise<HttpResponse<Output>> {
-    const response = await this.facebookAuthenticationUseCase.execute({ token: input?.body.token })
-    return response instanceof AuthenticationError
-      ? unauthorized(new AuthenticationError())
-      : successRequest({ accessToken: response.value })
+    try {
+      const accessToken = await this.facebookAuthenticationUseCase.execute({ token: input?.body.token })
+      return successRequest(accessToken)
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        return unauthorized()
+      }
+
+      throw error
+    }
   }
 
   override buildValidators (input: Input): Validator [] {

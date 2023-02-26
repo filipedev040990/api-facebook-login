@@ -4,7 +4,8 @@ export const env = {
     clientSecret: process.env.FB_CLIENT_SECRET ?? 'bf17a3107d34311dec65f50b80532234'
   },
   crypto: {
-    secretKey: process.env.CRYPTO_SECRET_KEY ?? 'c448f3579836b14afdf3fe413a46c546'
+    secretKey: process.env.CRYPTO_SECRET_KEY ?? 'c448f3579836b14afdf3fe413a46c546',
+    expiresIn: 30 * 60 * 1000
   },
   server: {
     port: process.env.PORT ?? 3000

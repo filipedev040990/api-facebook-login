@@ -8,7 +8,8 @@ module.exports = {
     '!<rootDir>/src/**/app.ts',
     '!<rootDir>/src/**/server.ts',
     '!<rootDir>/src/**/routes.ts',
-    '!<rootDir>/src/**/env.ts'
+    '!<rootDir>/src/**/env.ts',
+    '!<rootDir>/src/**/connection.ts'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',

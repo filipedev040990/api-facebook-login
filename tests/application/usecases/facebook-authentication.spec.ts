@@ -49,7 +49,7 @@ describe('FacebookAuthenticationUseCase', () => {
 
   test('should return AuthenticationError when FacebookApi returns undefined', async () => {
     facebookApi.getUser.mockResolvedValueOnce(undefined)
-    expect(await sut.execute({ token })).toEqual(new AuthenticationError())
+    await expect(sut.execute({ token })).rejects.toThrow(new AuthenticationError())
   })
 
   test('should call UserRepository.getByEmail with correct email when FacebookApi returns data', async () => {
@@ -87,7 +87,7 @@ describe('FacebookAuthenticationUseCase', () => {
   test('should return an AccessToken on success', async () => {
     const accessToken = await sut.execute({ token })
 
-    expect(accessToken).toEqual(new AccessToken('any_generated_token'))
+    expect(accessToken).toEqual({ accessToken: 'any_generated_token' })
   })
 
   test('should rethrow if FacebookApi throws', async () => {

@@ -7,7 +7,7 @@ describe('Facebook API', () => {
     const httpClient = new AxiosHttpClientAdapter()
     const sut = new FacebookApi(httpClient, env.facebookApi.clientId, env.facebookApi.clientSecret)
 
-    const facebookUser = await sut.getUser({ token: 'EAAJT3P05pjoBAHKrnEPdsilp0q6AbwzszsFbZB23Mfp33sZCeZCZAUDEhVEQfqXBlUgI7XXvnlGZBFyUxL2KzE1zKapZCYv1WFunsEMzhrnVPrJVZB14MiHySw3jWacWlNrFm21GceSuJdlAUlLI7EnvZA4DlU711ZCruqRqSlwhmcWyZBLy26FFtZApZCZCAA9lv8aIM13wbU4OcKV2sK13N4rdbKI7fVwpj2Edzwd27lmDj5W9zFGYM6pPs' })
+    const facebookUser = await sut.getUser({ token: 'EAAJT3P05pjoBAARXfJ51VQilkJXHUUZAbSArACGZAYPLlkyomFJepd81LZCn4Q20CF9ZCpLNfDkQhftCibmR4BlChZB8i2i8OfU8n54qI3jB4oZB2AZCcuOoIZAYH7EEuep8LQcc5JcR2BsPDOfYVwR1KVN0JbtHoqtBcecZCHk3DU22H0qq0MauZABOgpAr4ZB45ARzYJrLZA9ZA4RLuUCKcd8cIRa2QRz0BZCZAYukFImrBzA7XYZBar4f6QIG' })
 
     expect(facebookUser).toEqual({
       facebookId: '2862342247228983',
