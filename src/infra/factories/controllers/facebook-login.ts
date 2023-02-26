@@ -1,4 +1,4 @@
-import { FacebookLoginController } from '@/adapters/controllers'
+import { FacebookLoginController } from '@/infra/adapters/controllers'
 import { makeFacebookAuthenticationUseCase } from '../usecases/facebook-authentication'
 
 export const makeFacebookLoginController = (): FacebookLoginController => {

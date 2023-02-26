@@ -1,4 +1,4 @@
-import { Controller } from '@/adapters/controllers'
+import { Controller } from '@/infra/adapters/controllers'
 import { HttpResponse } from '@/application/shared/types'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 

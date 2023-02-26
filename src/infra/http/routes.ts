@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { expressAdapteRouter } from '../adapters/express-route'
-import { makeFacebookLoginController } from '../factories/controllers/facebook-login'
+import { expressAdapteRouter } from '@/infra/adapters/http/express-route'
+import { makeFacebookLoginController } from '@/infra/factories/controllers/facebook-login'
 
 const router = Router()
 

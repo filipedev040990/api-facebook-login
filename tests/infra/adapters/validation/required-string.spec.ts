@@ -1,4 +1,4 @@
-import { RequiredStringValidator } from '@/adapters/validation'
+import { RequiredStringValidator } from '@/infra/adapters/validation'
 import { MissingParamError } from '@/application/shared/errors'
 
 describe('RequiredStringValidator', () => {

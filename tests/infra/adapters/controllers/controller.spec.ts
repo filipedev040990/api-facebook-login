@@ -1,10 +1,10 @@
 import { ServerError } from '@/application/shared/errors'
-import { Controller } from '@/adapters/controllers'
+import { Controller } from '@/infra/adapters/controllers'
 import { mocked } from 'jest-mock'
-import { ValidationComposite } from '@/adapters/validation'
+import { ValidationComposite } from '@/infra/adapters/validation'
 import { HttpResponse } from '@/application/shared/types'
 
-jest.mock('@/adapters/validation/composite')
+jest.mock('@/infra/adapters/validation/composite')
 
 class ControllerStub extends Controller {
   async execute (input: any): Promise<HttpResponse> {
