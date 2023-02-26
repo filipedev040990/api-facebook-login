@@ -1,7 +1,7 @@
 import { Controller } from '@/adapters/controllers'
 import { FacebookAuthentication } from '@/domain/contracts'
 import { AuthenticationError } from '@/application/shared/errors'
-import { successRequest, unauthorized } from '@/application/shared/helpers/http'
+import { serverError, successRequest, unauthorized } from '@/application/shared/helpers/http'
 import { HttpResponse } from '@/application/shared/types'
 import { ValidationBuilder, Validator } from '@/adapters/validation'
 
@@ -25,11 +25,9 @@ export class FacebookLoginController extends Controller {
       const accessToken = await this.facebookAuthenticationUseCase.execute({ token: input?.body.token })
       return successRequest(accessToken)
     } catch (error) {
-      if (error instanceof AuthenticationError) {
-        return unauthorized()
-      }
-
-      throw error
+      return error instanceof AuthenticationError
+        ? unauthorized()
+        : serverError(error)
     }
   }
 

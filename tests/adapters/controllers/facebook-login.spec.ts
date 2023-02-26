@@ -51,6 +51,19 @@ describe('FacebookLoginController', () => {
     })
   })
 
+  test('should throws if FacebookAuthenticationUseCase throws', async () => {
+    facebookAuthenticationUseCaseStub.execute.mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const response = await sut.execute(httpRequest)
+
+    expect(response).toEqual({
+      statusCode: 500,
+      body: new Error('Internal server error')
+    })
+  })
+
   test('should return 200 and token if authentication succeeds', async () => {
     const response = await sut.execute(httpRequest)
 
