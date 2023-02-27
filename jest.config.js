@@ -1,9 +1,11 @@
 module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/main/**',
-    '!<rootDir>/src/shared/**',
+    '!<rootDir>/src/**/shared/**',
     '!<rootDir>/src/infra/factories/**',
+    '!<rootDir>/src/infra/database/entities/**',
+    '!<rootDir>/src/**/contracts/**',
+    '!<rootDir>/src/**/shared/types/**',
     '!<rootDir>/src/**/index.ts',
     '!<rootDir>/src/**/app.ts',
     '!<rootDir>/src/**/server.ts',

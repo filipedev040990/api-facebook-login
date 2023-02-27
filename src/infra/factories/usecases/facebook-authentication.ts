@@ -1,6 +1,6 @@
 import { FacebookAuthenticationUseCase } from '@/application/usecases'
 import { FacebookApi } from '@/infra/apis'
-import { AxiosHttpClientAdapter } from '@/infra/http'
+import { AxiosHttpClientAdapter } from '@/infra/adapters/http/axios-client-adapter'
 import { env } from '@/infra/env'
 import { JwtTokenAdapter } from '@/infra/adapters/crypto'
 import { UserRepository } from '@/infra/database/repositories'
