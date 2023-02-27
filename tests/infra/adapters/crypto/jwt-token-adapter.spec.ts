@@ -49,12 +49,19 @@ describe('JwtTokenAdapter', () => {
 
     beforeAll(() => {
       token = 'any_token'
+      fakeJwt.verify.mockImplementation(() => ({ key }))
     })
     test('should call verify once and with correct values', async () => {
-      await sut.validateToken({ token, secretKey })
+      await sut.validateToken({ token })
 
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secretKey)
+    })
+
+    test('should return the key used to sign', async () => {
+      const response = await sut.validateToken({ token })
+
+      expect(response).toBe(key)
     })
   })
 })
