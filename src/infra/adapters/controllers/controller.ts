@@ -11,9 +11,7 @@ export abstract class Controller {
 
   async handle (input: any): Promise<HttpResponse> {
     const error = this.validate(input)
-    if (error) {
-      return badRequest(error)
-    }
+    if (error) return badRequest(error)
 
     try {
       return await this.execute(input)
