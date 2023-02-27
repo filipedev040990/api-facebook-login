@@ -19,15 +19,18 @@ export class Authorize {
 describe('Authorize', () => {
   let token: string
   let crypto: MockProxy<TokenValidator>
+  let sut: Authorize
 
   beforeAll(() => {
     token = 'any_token'
     crypto = mock()
   })
 
-  test('should call TokenValidator with correct token', async () => {
-    const sut = new Authorize(crypto)
+  beforeEach(() => {
+    sut = new Authorize(crypto)
+  })
 
+  test('should call TokenValidator with correct token', async () => {
     await sut.execute({ token })
 
     expect(crypto.validateToken).toHaveBeenCalledTimes(1)
