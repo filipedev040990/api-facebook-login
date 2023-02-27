@@ -63,5 +63,13 @@ describe('JwtTokenAdapter', () => {
 
       expect(response).toBe(key)
     })
+
+    test('should rethrow if verify throws', async () => {
+      fakeJwt.verify.mockImplementationOnce(() => { throw new Error('token_error') })
+
+      const promise = sut.validateToken({ token })
+
+      await expect(promise).rejects.toThrow(new Error('token_error'))
+    })
   })
 })
