@@ -3,7 +3,7 @@ export type HttpResponse<T = any > = {
   body: T
 }
 
-export type HttpRequest = {
-  params?: any
-  body?: any
+export type HttpRequest<T = any> = {
+  params?: T
+  body?: T
 }
