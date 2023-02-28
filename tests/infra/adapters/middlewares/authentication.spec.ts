@@ -11,12 +11,16 @@ export type Output = Error
 export class AuthenticationMiddleware {
   constructor (private readonly authorize: Authorize) {}
   async execute ({ authorization }: Input): Promise<HttpResponse<Output> | undefined> {
-    const error = new RequiredStringValidator(authorization, 'authorization').execute()
-    if (error) {
+    try {
+      const error = new RequiredStringValidator(authorization, 'authorization').execute()
+      if (error) {
+        return forbidden()
+      }
+
+      await this.authorize.execute({ token: authorization })
+    } catch {
       return forbidden()
     }
-
-    await this.authorize.execute({ token: authorization })
   }
 }
 
@@ -57,5 +61,12 @@ describe('AuthenticationMiddleware', () => {
 
     expect(authorize.execute).toHaveBeenCalledTimes(1)
     expect(authorize.execute).toHaveBeenCalledWith({ token: 'any_token' })
+  })
+
+  test('should return 403 if authorize throws', async () => {
+    authorize.execute.mockRejectedValueOnce(new Error('any_error'))
+    const response = await sut.execute({ authorization: 'any_token' })
+
+    expect(response).toEqual(forbidenError)
   })
 })
