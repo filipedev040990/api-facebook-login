@@ -14,6 +14,6 @@ export const expressAdapterMiddleware = (middleware: AuthenticationMiddleware) =
       return next()
     }
 
-    res.status(statusCode).json({ error: body })
+    res.status(statusCode).json({ error: body.message })
   }
 }

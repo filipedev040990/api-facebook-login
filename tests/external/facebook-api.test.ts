@@ -1,5 +1,5 @@
 import { FacebookApi } from '@/infra/apis'
-import { AxiosHttpClientAdapter } from '@/infra/adapters/http/axios-client-adapter'
+import { AxiosHttpClientAdapter } from '@/infra/adapters/http'
 import { env } from '@/infra/env'
 
 describe('Facebook API', () => {

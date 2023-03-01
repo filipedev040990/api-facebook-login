@@ -40,7 +40,7 @@ describe('expressAdapterMiddleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(403)
     expect(res.status).toHaveBeenCalledTimes(1)
-    expect(res.json).toHaveBeenCalledWith({ error: new ForbiddenError() })
+    expect(res.json).toHaveBeenCalledWith({ error: new ForbiddenError().message })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
 

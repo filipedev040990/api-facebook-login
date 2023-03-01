@@ -1,6 +1,7 @@
 module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/@types/**.d.ts',
     '!<rootDir>/src/**/shared/**',
     '!<rootDir>/src/infra/factories/**',
     '!<rootDir>/src/infra/database/entities/**',
