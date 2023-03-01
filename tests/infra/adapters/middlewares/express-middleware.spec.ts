@@ -43,4 +43,11 @@ describe('expressAdapterMiddleware', () => {
     expect(res.json).toHaveBeenCalledWith({ error: new ForbiddenError() })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
+
+  test('should set userId correctly into request', async () => {
+    await sut(req, res, next)
+
+    expect(req.userId).toBe('anyUserId')
+    expect(next).toHaveBeenCalled()
+  })
 })
