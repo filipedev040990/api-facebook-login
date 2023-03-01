@@ -4,7 +4,7 @@ import { Authorize } from '@/application/usecases'
 import { RequiredStringValidator } from '@/infra/adapters/validation'
 
 type Input = { authorization: string }
-type Output = Error | { userId: string}
+type Output = Error | { userId: string }
 
 export class AuthenticationMiddleware {
   constructor (private readonly authorize: Authorize) {}
