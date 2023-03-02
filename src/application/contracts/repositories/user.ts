@@ -1,8 +1,8 @@
-export interface GetUserRepository {
-  getByEmail: (input: GetUserRepository.Input) => Promise<GetUserRepository.Output>
+export interface GetUser {
+  getByEmail: (input: GetUser.Input) => Promise<GetUser.Output>
 }
 
-export namespace GetUserRepository {
+export namespace GetUser {
   export type Input = {
     email: string
   }
@@ -13,11 +13,11 @@ export namespace GetUserRepository {
   }
 }
 
-export interface SaveUserFromFacebookRepository {
-  saveWithFacebook: (input: SaveUserFromFacebookRepository.Input) => Promise<SaveUserFromFacebookRepository.Output>
+export interface SaveUserFromFacebook {
+  saveWithFacebook: (input: SaveUserFromFacebook.Input) => Promise<SaveUserFromFacebook.Output>
 }
 
-export namespace SaveUserFromFacebookRepository {
+export namespace SaveUserFromFacebook {
   export type Input = {
     id?: string
     name: string

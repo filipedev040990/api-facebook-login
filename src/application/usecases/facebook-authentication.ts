@@ -1,24 +1,24 @@
-import { GetFacebookUserApi } from '@/application/contracts/apis'
+import { GetFacebookUser } from '@/application/contracts/gateways'
 import { FacebookAuthentication } from '@/domain/contracts'
-import { SaveUserFromFacebookRepository, GetUserRepository } from '@/application/contracts/repositories'
+import { SaveUserFromFacebook, GetUser } from '@/application/contracts/repositories'
 import { FacebookUserEntity, AccessToken } from '@/domain/entities'
 import { TokenGenerator } from '@/application/contracts/crypto/token'
 import { AuthenticationError } from '@/application/shared/errors'
 
 export class FacebookAuthenticationUseCase implements FacebookAuthentication {
   constructor (
-    private readonly facebookApi: GetFacebookUserApi,
-    private readonly userRepository: GetUserRepository & SaveUserFromFacebookRepository,
-    private readonly crypto: TokenGenerator
+    private readonly facebook: GetFacebookUser,
+    private readonly userRepository: GetUser & SaveUserFromFacebook,
+    private readonly token: TokenGenerator
   ) {}
 
   async execute (params: FacebookAuthentication.Input): Promise<FacebookAuthentication.Output> {
-    const facebookData = await this.facebookApi.getUser({ token: params.token })
+    const facebookData = await this.facebook.getUser({ token: params.token })
     if (facebookData) {
       const userExistsData = await this.userRepository.getByEmail({ email: facebookData.email })
       const facebookUser = new FacebookUserEntity(facebookData, userExistsData)
       const userId = await this.userRepository.saveWithFacebook(facebookUser)
-      const accessToken = await this.crypto.generateToken({ key: userId.id, expirationInMs: AccessToken.expirationInMs })
+      const accessToken = await this.token.generate({ key: userId.id, expirationInMs: AccessToken.expirationInMs })
       return { accessToken }
     }
 

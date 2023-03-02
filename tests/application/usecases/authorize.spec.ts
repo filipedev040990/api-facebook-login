@@ -10,7 +10,7 @@ describe('Authorize', () => {
   beforeAll(() => {
     token = 'any_token'
     crypto = mock()
-    crypto.validateToken.mockResolvedValue({ key: 'any_key' })
+    crypto.validate.mockResolvedValue({ key: 'any_key' })
   })
 
   beforeEach(() => {
@@ -20,8 +20,8 @@ describe('Authorize', () => {
   test('should call TokenValidator with correct token', async () => {
     await sut.execute({ token })
 
-    expect(crypto.validateToken).toHaveBeenCalledTimes(1)
-    expect(crypto.validateToken).toHaveBeenCalledWith({ token })
+    expect(crypto.validate).toHaveBeenCalledTimes(1)
+    expect(crypto.validate).toHaveBeenCalledWith({ token })
   })
 
   test('should return correct data on success', async () => {

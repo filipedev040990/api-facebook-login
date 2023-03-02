@@ -1,7 +1,7 @@
 import { FacebookAuthenticationUseCase } from '@/application/usecases'
-import { GetFacebookUserApi } from '@/application/contracts/apis'
+import { GetFacebookUser } from '@/application/contracts/gateways'
 import { AuthenticationError } from '@/application/shared/errors'
-import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
+import { GetUser, SaveUserFromFacebook } from '@/application/contracts/repositories'
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { mocked } from 'jest-mock'
@@ -16,10 +16,10 @@ const userData = {
   facebookId: 'Any Facebook Id'
 }
 
-let facebookApi: MockProxy<GetFacebookUserApi>
+let facebookApi: MockProxy<GetFacebookUser>
 let crypto: MockProxy<TokenGenerator>
 let sut: FacebookAuthenticationUseCase
-let userRepository: MockProxy<GetUserRepository & SaveUserFromFacebookRepository>
+let userRepository: MockProxy<GetUser & SaveUserFromFacebook>
 let token: string
 
 describe('FacebookAuthenticationUseCase', () => {
@@ -34,7 +34,7 @@ describe('FacebookAuthenticationUseCase', () => {
     userRepository.saveWithFacebook.mockResolvedValue({ id: 'anyId' })
 
     crypto = mock()
-    crypto.generateToken.mockResolvedValue('any_generated_token')
+    crypto.generate.mockResolvedValue('any_generated_token')
   })
 
   beforeEach(() => {
@@ -77,11 +77,11 @@ describe('FacebookAuthenticationUseCase', () => {
     })
   })
 
-  test('should call Crypto.generateToken with correct values', async () => {
+  test('should call Crypto.generate with correct values', async () => {
     await sut.execute({ token })
 
-    expect(crypto.generateToken).toHaveBeenCalledTimes(1)
-    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'anyId', expirationInMs: AccessToken.expirationInMs })
+    expect(crypto.generate).toHaveBeenCalledTimes(1)
+    expect(crypto.generate).toHaveBeenCalledWith({ key: 'anyId', expirationInMs: AccessToken.expirationInMs })
   })
 
   test('should return an AccessToken on success', async () => {
@@ -114,8 +114,8 @@ describe('FacebookAuthenticationUseCase', () => {
     await expect(response).rejects.toThrow()
   })
 
-  test('should rethrow if Crypto.generateToken throws', async () => {
-    crypto.generateToken.mockRejectedValue(new Error())
+  test('should rethrow if Crypto.generate throws', async () => {
+    crypto.generate.mockRejectedValue(new Error())
 
     const response = sut.execute({ token })
 

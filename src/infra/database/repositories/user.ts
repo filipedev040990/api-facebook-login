@@ -1,9 +1,9 @@
-import { GetUserRepository, SaveUserFromFacebookRepository } from '@/application/contracts/repositories'
+import { GetUser, SaveUserFromFacebook } from '@/application/contracts/repositories'
 import { User } from '@/infra/database/entities'
 import { getRepository } from 'typeorm'
 
-export class UserRepository implements GetUserRepository, SaveUserFromFacebookRepository {
-  async getByEmail ({ email }: GetUserRepository.Input): Promise<GetUserRepository.Output> {
+export class UserRepository implements GetUser, SaveUserFromFacebook {
+  async getByEmail ({ email }: GetUser.Input): Promise<GetUser.Output> {
     const repository = getRepository(User)
     const user = await repository.findOne({ email })
     if (user) {
@@ -14,7 +14,7 @@ export class UserRepository implements GetUserRepository, SaveUserFromFacebookRe
     }
   }
 
-  async saveWithFacebook ({ id, name, email, facebookId }: SaveUserFromFacebookRepository.Input): Promise<SaveUserFromFacebookRepository.Output> {
+  async saveWithFacebook ({ id, name, email, facebookId }: SaveUserFromFacebook.Input): Promise<SaveUserFromFacebook.Output> {
     const repository = getRepository(User)
     let resultId: string
 
