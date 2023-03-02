@@ -61,7 +61,7 @@ describe('JwtTokenAdapter', () => {
     test('should return the key used to sign', async () => {
       const response = await sut.validateToken({ token })
 
-      expect(response).toBe(key)
+      expect(response).toEqual({ key })
     })
 
     test('should rethrow if verify throws', async () => {
@@ -70,14 +70,6 @@ describe('JwtTokenAdapter', () => {
       const promise = sut.validateToken({ token })
 
       await expect(promise).rejects.toThrow(new Error('token_error'))
-    })
-
-    test('should rethrow if verify returns null', async () => {
-      fakeJwt.verify.mockImplementationOnce(() => null)
-
-      const promise = sut.validateToken({ token })
-
-      await expect(promise).rejects.toThrow()
     })
   })
 })

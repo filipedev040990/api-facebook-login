@@ -7,8 +7,8 @@ export class JwtTokenAdapter implements TokenGenerator, TokenValidator {
     return sign({ key }, this.secretKey, { expiresIn: expirationInMs })
   }
 
-  async validateToken ({ token }: TokenValidator.Input): Promise<TokenValidator.Output> {
+  async validateToken ({ token }: TokenValidator.Input): Promise<any> {
     const payload = verify(token, this.secretKey) as JwtPayload
-    return payload.key
+    return payload
   }
 }
