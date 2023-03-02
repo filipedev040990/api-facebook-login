@@ -1,11 +1,11 @@
 import { Middleware } from '@/application/contracts/middlewares/authentication'
 import { forbidden, successRequest } from '@/application/shared/helpers/http'
 import { HttpResponse } from '@/application/shared/types'
-import { Authorize } from '@/application/usecases'
+import { AuthorizationMiddleware } from '@/domain/contracts/authorization-middleware'
 import { RequiredStringValidator } from '@/infra/adapters/validation'
 
 export class AuthenticationMiddleware {
-  constructor (private readonly authorize: Authorize) {}
+  constructor (private readonly authorize: AuthorizationMiddleware) {}
   async execute ({ authorization }: Middleware.Input): Promise<HttpResponse<Middleware.Output>> {
     if (!this.validate({ authorization })) {
       return forbidden()
