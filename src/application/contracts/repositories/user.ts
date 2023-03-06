@@ -29,3 +29,12 @@ export namespace SaveUserFromFacebook {
     id: string
   }
 }
+
+export interface SavePicture {
+  savePictureUrl: (input: SavePicture.Input) => Promise<SavePicture.Output>
+}
+
+export namespace SavePicture {
+  export type Input = { pictureUrl: string }
+  export type Output = string
+}
