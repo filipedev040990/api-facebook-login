@@ -9,6 +9,8 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
   ) {}
 
   async execute ({ file, id }: IChangeProfilePicture.Input): Promise<void> {
-    await this.fileStorage.upload({ file, key: this.crypto.uuid({ key: id }) })
+    if (file) {
+      await this.fileStorage.upload({ file, key: this.crypto.uuid({ key: id }) })
+    }
   }
 }

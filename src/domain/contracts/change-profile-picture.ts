@@ -3,5 +3,5 @@ export interface IChangeProfilePicture {
 }
 
 export namespace IChangeProfilePicture {
-  export type Input = { id: string, file: Buffer }
+  export type Input = { id: string, file?: Buffer }
 }
