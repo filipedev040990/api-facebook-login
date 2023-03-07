@@ -38,3 +38,12 @@ export namespace SavePicture {
   export type Input = { pictureUrl?: string }
   export type Output = string
 }
+export interface GetUserById {
+  getById: (input: GetUserById.Input) => Promise<void>
+}
+
+export namespace GetUserById {
+  export type Input = {
+    id: string
+  }
+}
