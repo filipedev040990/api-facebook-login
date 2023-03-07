@@ -60,4 +60,10 @@ describe('ChangeProfilePicture', () => {
     expect(userRepository.getById).toHaveBeenCalledTimes(1)
     expect(userRepository.getById).toHaveBeenCalledWith({ id: 'anyId' })
   })
+
+  test('should not call UserRepository.getById if file is provided', async () => {
+    await sut.execute({ id: 'anyId', file })
+
+    expect(userRepository.getById).not.toHaveBeenCalled()
+  })
 })
