@@ -35,7 +35,7 @@ export interface SavePicture {
 }
 
 export namespace SavePicture {
-  export type Input = { pictureUrl?: string, initials?: string }
+  export type Input = { id: string, pictureUrl?: string, initials?: string }
   export type Output = string
 }
 export interface GetUserById {
