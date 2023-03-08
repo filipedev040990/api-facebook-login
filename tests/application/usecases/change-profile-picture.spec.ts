@@ -20,6 +20,7 @@ describe('ChangeProfilePicture', () => {
     fileStorage.upload.mockResolvedValue('anyUrl')
     crypto = mock()
     userRepository = mock()
+    userRepository.getById.mockResolvedValue({ name: 'Zé das Couves' })
     crypto.uuid.mockReturnValue(uuid)
   })
 
@@ -51,7 +52,7 @@ describe('ChangeProfilePicture', () => {
     await sut.execute({ id: 'anyId', file: undefined })
 
     expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
-    expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined })
+    expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined, initials: 'ZC' })
   })
 
   test('should call UserRepository.getById once and with correct input when file is undefined', async () => {

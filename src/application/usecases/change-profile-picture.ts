@@ -12,13 +12,18 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
 
   async execute ({ file, id }: IChangeProfilePicture.Input): Promise<void> {
     let pictureUrl: string | undefined
+    let initials: string | undefined
 
     if (file) {
       pictureUrl = await this.fileStorage.upload({ file, key: this.crypto.uuid({ key: id }) })
     } else {
-      await this.userRepository.getById({ id })
+      const { name } = await this.userRepository.getById({ id })
+      if (name) {
+        const firsLetters = name.match(/\b(.)/g) ?? []
+        initials = `${firsLetters.shift()?.toUpperCase() ?? ''}${firsLetters.pop()?.toUpperCase() ?? ''}`
+      }
     }
 
-    await this.userRepository.savePictureUrl({ pictureUrl })
+    await this.userRepository.savePictureUrl({ pictureUrl, initials })
   }
 }

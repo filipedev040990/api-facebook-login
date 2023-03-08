@@ -35,15 +35,14 @@ export interface SavePicture {
 }
 
 export namespace SavePicture {
-  export type Input = { pictureUrl?: string }
+  export type Input = { pictureUrl?: string, initials?: string }
   export type Output = string
 }
 export interface GetUserById {
-  getById: (input: GetUserById.Input) => Promise<void>
+  getById: (input: GetUserById.Input) => Promise<GetUserById.Output>
 }
 
 export namespace GetUserById {
-  export type Input = {
-    id: string
-  }
+  export type Input = { id: string }
+  export type Output = { name?: string }
 }
