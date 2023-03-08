@@ -20,7 +20,11 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
       const { name } = await this.userRepository.getById({ id })
       if (name) {
         const firsLetters = name.match(/\b(.)/g) ?? []
-        initials = `${firsLetters.shift()?.toUpperCase() ?? ''}${firsLetters.pop()?.toUpperCase() ?? ''}`
+        if (firsLetters.length > 1) {
+          initials = `${firsLetters.shift()?.toUpperCase() ?? ''}${firsLetters.pop()?.toUpperCase() ?? ''}`
+        } else {
+          initials = name.substring(0, 2).toUpperCase()
+        }
       }
     }
 

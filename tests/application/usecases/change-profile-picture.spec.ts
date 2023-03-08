@@ -20,7 +20,7 @@ describe('ChangeProfilePicture', () => {
     fileStorage.upload.mockResolvedValue('anyUrl')
     crypto = mock()
     userRepository = mock()
-    userRepository.getById.mockResolvedValue({ name: 'Zé das Couves' })
+    userRepository.getById.mockResolvedValue({ name: 'Ze das Couves' })
     crypto.uuid.mockReturnValue(uuid)
   })
 
@@ -53,6 +53,30 @@ describe('ChangeProfilePicture', () => {
 
     expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
     expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined, initials: 'ZC' })
+  })
+
+  test('should call UserRepository.savePicture once and with correct input', async () => {
+    userRepository.getById.mockResolvedValue({ name: 'ZE' })
+    await sut.execute({ id: 'anyId', file: undefined })
+
+    expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
+    expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined, initials: 'ZE' })
+  })
+
+  test('should call UserRepository.savePicture once and with correct input', async () => {
+    userRepository.getById.mockResolvedValue({ name: 'Z' })
+    await sut.execute({ id: 'anyId', file: undefined })
+
+    expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
+    expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined, initials: 'Z' })
+  })
+
+  test('should call UserRepository.savePicture once and with correct input', async () => {
+    userRepository.getById.mockResolvedValue({ name: undefined })
+    await sut.execute({ id: 'anyId', file: undefined })
+
+    expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
+    expect(userRepository.savePictureUrl).toHaveBeenCalledWith({ pictureUrl: undefined, initials: undefined })
   })
 
   test('should call UserRepository.getById once and with correct input when file is undefined', async () => {
