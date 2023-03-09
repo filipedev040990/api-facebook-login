@@ -1,11 +1,13 @@
 import { IUUIDGenerator } from '@/application/contracts/crypto/uuid'
+
 import { v4 } from 'uuid'
+import { mocked } from 'ts-jest/utils'
 
 jest.mock('uuid')
 
 export class UUIDHandler {
-  uuid (input: IUUIDGenerator.Input): void {
-    v4()
+  uuid ({ key }: IUUIDGenerator.Input): IUUIDGenerator.Output {
+    return `${key}_${v4()}`
   }
 }
 
@@ -16,5 +18,14 @@ describe('UUIDHandler', () => {
     sut.uuid({ key: 'anyKey' })
 
     expect(v4).toHaveBeenCalledTimes(1)
+  })
+
+  test('should return correct value', () => {
+    mocked(v4).mockReturnValueOnce('anyUUID')
+    const sut = new UUIDHandler()
+
+    const uuid = sut.uuid({ key: 'anyKey' })
+
+    expect(uuid).toBe('anyKey_anyUUID')
   })
 })
