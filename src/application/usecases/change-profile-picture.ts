@@ -24,11 +24,11 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
 
     try {
       await this.userRepository.savePictureUrl(userProfile)
-    } catch {
+    } catch (error) {
       if (file) {
         await this.fileStorage.delete({ key })
       }
-      throw new Error()
+      throw error
     }
 
     return {
