@@ -13,9 +13,9 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
 
   async execute ({ file, id }: IChangeProfilePicture.Input): Promise<IChangeProfilePicture.Output> {
     const data: { name?: string, pictureUrl?: string } = {}
-    const key = id
+    const key = this.crypto.uuid({ key: id })
     if (file) {
-      data.pictureUrl = await this.fileStorage.upload({ file, key: this.crypto.uuid({ key }) })
+      data.pictureUrl = await this.fileStorage.upload({ file, key })
     } else {
       data.name = (await this.userRepository.getById({ id })).name
     }
@@ -25,7 +25,10 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
     try {
       await this.userRepository.savePictureUrl(userProfile)
     } catch {
-      await this.fileStorage.delete({ key })
+      if (file) {
+        await this.fileStorage.delete({ key })
+      }
+      throw new Error()
     }
 
     return {

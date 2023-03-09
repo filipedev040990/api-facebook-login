@@ -81,14 +81,25 @@ describe('ChangeProfilePicture', () => {
     })
   })
 
-  test('should call DeleteFile once and with correct values when UserRepository.savePicture throws', async () => {
+  test('should call DeleteFile once and with correct values when UserRepository.savePicture throws and file exists', async () => {
     userRepository.savePictureUrl.mockRejectedValueOnce(new Error())
+    expect.assertions(2)
 
     const promise = sut.execute({ id: 'anyId', file })
 
     promise.catch(() => {
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
       expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
+    })
+  })
+
+  test('should not call DeleteFile once and with correct values when UserRepository.savePicture throws and file does not exists', async () => {
+    userRepository.savePictureUrl.mockRejectedValueOnce(new Error())
+    expect.assertions(1)
+    const promise = sut.execute({ id: 'anyId', file: undefined })
+
+    promise.catch(() => {
+      expect(fileStorage.delete).not.toHaveBeenCalled()
     })
   })
 })
