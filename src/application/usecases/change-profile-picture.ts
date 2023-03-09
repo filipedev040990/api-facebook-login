@@ -11,7 +11,7 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
     private readonly userRepository: SavePicture & GetUserById
   ) {}
 
-  async execute ({ file, id }: IChangeProfilePicture.Input): Promise<void> {
+  async execute ({ file, id }: IChangeProfilePicture.Input): Promise<IChangeProfilePicture.Output> {
     const data: { name?: string, pictureUrl?: string } = {}
 
     if (file) {
@@ -23,5 +23,10 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
     userProfile.setPicture(data)
 
     await this.userRepository.savePictureUrl(userProfile)
+
+    return {
+      pictureUrl: userProfile.pictureUrl,
+      initials: userProfile.initials
+    }
   }
 }
