@@ -26,7 +26,7 @@
 4. ✅ Limpar o campo de iniciais do nome do usuário
 
 > ## Fluxo de exceção: Erro ao atualizar foto do usuário
-1. ⛔ Apagar a foto criada no FileStorage
+1. ✅ Apagar a foto criada no FileStorage
 2. ⛔ Repassar o mesmo erro recebido
 
 ✅

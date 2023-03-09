@@ -1,7 +1,7 @@
 import { IChangeProfilePicture } from '@/domain/contracts/change-profile-picture'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { IUUIDGenerator } from '@/application/contracts/crypto/uuid'
-import { IUploadFile } from '@/application/contracts/gateways/file-storage'
+import { DeleteFile, IUploadFile } from '@/application/contracts/gateways/file-storage'
 import { ChangeProfilePicture } from '@/application/usecases'
 import { GetUserById, SavePicture } from '@/application/contracts/repositories'
 import { mocked } from 'jest-mock'
@@ -12,7 +12,7 @@ jest.mock('@/domain/entities/user-profile')
 describe('ChangeProfilePicture', () => {
   let file: Buffer
   let uuid: string
-  let fileStorage: MockProxy<IUploadFile>
+  let fileStorage: MockProxy<IUploadFile & DeleteFile>
   let crypto: MockProxy<IUUIDGenerator>
   let userRepository: MockProxy<SavePicture & GetUserById>
   let sut: IChangeProfilePicture
@@ -78,6 +78,17 @@ describe('ChangeProfilePicture', () => {
     expect(response).toEqual({
       pictureUrl: 'anyUrl',
       initials: 'anyInitials'
+    })
+  })
+
+  test('should call DeleteFile once and with correct values when UserRepository.savePicture throws', async () => {
+    userRepository.savePictureUrl.mockRejectedValueOnce(new Error())
+
+    const promise = sut.execute({ id: 'anyId', file })
+
+    promise.catch(() => {
+      expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+      expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
     })
   })
 })
