@@ -1,8 +1,8 @@
-import { GetFacebookUser } from '@/application/contracts/gateways'
+import { GetFacebookUser } from '@/application/contracts/adapters'
 import { FacebookAuthentication } from '@/domain/contracts'
 import { SaveUserFromFacebook, GetUser } from '@/application/contracts/repositories'
 import { FacebookUserEntity, AccessToken } from '@/domain/entities'
-import { TokenGenerator } from '@/application/contracts/crypto/token'
+import { TokenGenerator } from '@/application/contracts/adapters/token'
 import { AuthenticationError } from '@/application/shared/errors'
 
 export class FacebookAuthenticationUseCase implements FacebookAuthentication {

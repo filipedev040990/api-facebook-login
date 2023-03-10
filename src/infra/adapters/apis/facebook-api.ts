@@ -1,6 +1,5 @@
-import { GetFacebookUser } from '@/application/contracts/gateways'
-import { HttpGetClient } from '@/application/contracts/http/http-client'
-
+import { GetFacebookUser } from '@/application/contracts/adapters'
+import { HttpGetClient } from '@/application/contracts/adapters/http-client'
 type AppToken = {
   access_token: string
 }

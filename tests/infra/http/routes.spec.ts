@@ -6,7 +6,7 @@ import request from 'supertest'
 
 const getUserSpy = jest.fn()
 
-jest.mock('@/infra/apis/facebook-api', () => ({
+jest.mock('@/infra/adapters/apis/facebook-api', () => ({
   FacebookApi: jest.fn().mockReturnValue({
     getUser: getUserSpy
   })

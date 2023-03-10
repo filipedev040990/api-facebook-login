@@ -1,4 +1,4 @@
-import { TokenGenerator, TokenValidator } from '@/application/contracts/crypto/token'
+import { TokenGenerator, TokenValidator } from '@/application/contracts/adapters/token'
 import { JwtPayload, sign, verify } from 'jsonwebtoken'
 
 export class JwtTokenAdapter implements TokenGenerator, TokenValidator {

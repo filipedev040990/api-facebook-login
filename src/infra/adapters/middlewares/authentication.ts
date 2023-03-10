@@ -1,4 +1,5 @@
-import { Middleware } from '@/application/contracts/middlewares/authentication'
+
+import { Middleware } from '@/application/contracts/adapters/authentication'
 import { forbidden, successRequest } from '@/application/shared/helpers/http'
 import { HttpResponse } from '@/application/shared/types'
 import { AuthorizationMiddleware } from '@/domain/contracts/authorization-middleware'

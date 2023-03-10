@@ -1,5 +1,4 @@
-import { IUUIDGenerator } from '@/application/contracts/crypto/uuid'
-
+import { IUUIDGenerator } from '@/application/contracts/adapters/uuid'
 import { v4 } from 'uuid'
 
 export class UUIDHandler implements IUUIDGenerator {

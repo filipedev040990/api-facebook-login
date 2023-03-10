@@ -1,11 +1,11 @@
 import { IChangeProfilePicture } from '@/domain/contracts/change-profile-picture'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { IUUIDGenerator } from '@/application/contracts/crypto/uuid'
-import { DeleteFile, IUploadFile } from '@/application/contracts/gateways/file-storage'
 import { ChangeProfilePicture } from '@/application/usecases'
 import { GetUserById, SavePicture } from '@/application/contracts/repositories'
 import { mocked } from 'jest-mock'
 import { UserProfile } from '@/domain/entities'
+import { IUploadFile, DeleteFile } from '@/application/contracts/adapters/file-storage'
+import { IUUIDGenerator } from '@/application/contracts/adapters/uuid'
 
 jest.mock('@/domain/entities/user-profile')
 

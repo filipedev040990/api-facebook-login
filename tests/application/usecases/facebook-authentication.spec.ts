@@ -1,11 +1,11 @@
 import { FacebookAuthenticationUseCase } from '@/application/usecases'
-import { GetFacebookUser } from '@/application/contracts/gateways'
+import { GetFacebookUser } from '@/application/contracts/adapters'
 import { AuthenticationError } from '@/application/shared/errors'
 import { GetUser, SaveUserFromFacebook } from '@/application/contracts/repositories'
 import { FacebookUserEntity } from '@/domain/entities/facebook-user'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { mocked } from 'jest-mock'
-import { TokenGenerator } from '../contracts/crypto/token'
+import { TokenGenerator } from '../contracts/adapters/token'
 import { AccessToken } from '@/domain/entities'
 
 jest.mock('@/domain/entities/facebook-user')

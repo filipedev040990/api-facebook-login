@@ -1,4 +1,4 @@
-import { TokenValidator } from '@/application/contracts/crypto/token'
+import { TokenValidator } from '@/application/contracts/adapters/token'
 
 export class Authorize {
   constructor (private readonly token: TokenValidator) {}

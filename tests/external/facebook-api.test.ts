@@ -1,4 +1,4 @@
-import { FacebookApi } from '@/infra/apis'
+import { FacebookApi } from '@/infra/adapters/apis'
 import { AxiosHttpClientAdapter } from '@/infra/adapters/http'
 import { env } from '@/infra/env'
 
