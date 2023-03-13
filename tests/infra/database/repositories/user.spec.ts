@@ -91,4 +91,14 @@ describe('UserRepository', () => {
       expect(user).toMatchObject({ id, pictureUrl: 'anyUrl', initials: null })
     })
   })
+
+  describe('getById', () => {
+    test('should return an user', async () => {
+      const { id } = await userRepository.save({ email: 'anyEmail@email.com', name: 'anyName' })
+
+      const user = await sut.getById({ id: id.toString() })
+
+      expect(user?.name).toBe('anyName')
+    })
+  })
 })
