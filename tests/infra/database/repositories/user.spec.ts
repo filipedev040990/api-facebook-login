@@ -100,5 +100,11 @@ describe('UserRepository', () => {
 
       expect(user?.name).toBe('anyName')
     })
+
+    test('should return undefined', async () => {
+      const user = await sut.getById({ id: '1' })
+
+      expect(user).toBeUndefined()
+    })
   })
 })
