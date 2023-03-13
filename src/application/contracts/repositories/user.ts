@@ -46,3 +46,11 @@ export namespace GetUserById {
   export type Input = { id: string }
   export type Output = { name?: string }
 }
+
+export interface SavePictureUrl {
+  savePictureUrl: (input: SavePictureUrl.Input) => Promise<void>
+}
+
+export namespace SavePictureUrl {
+  export type Input = { id: string, pictureUrl?: string, initials?: string }
+}

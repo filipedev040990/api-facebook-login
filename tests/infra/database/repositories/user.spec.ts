@@ -69,7 +69,7 @@ describe('UserRepository', () => {
 
       const user = await userRepository.findOne({ id: 1 })
 
-      expect(user).toEqual({
+      expect(user).toMatchObject({
         id: 1,
         email: 'anyEmail@email.com',
         name: 'newName',
@@ -77,6 +77,18 @@ describe('UserRepository', () => {
       })
 
       expect(id).toBe('1')
+    })
+  })
+
+  describe('savePicture', () => {
+    test('should update imageUrl', async () => {
+      const { id } = await userRepository.save({ email: 'anyEmail@email.com', initials: 'FS' })
+
+      await sut.savePictureUrl({ id: id.toString(), pictureUrl: 'anyUrl' })
+
+      const user = await userRepository.findOne({ id })
+
+      expect(user).toMatchObject({ id, pictureUrl: 'anyUrl', initials: null })
     })
   })
 })

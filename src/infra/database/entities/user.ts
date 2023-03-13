@@ -14,4 +14,10 @@ export class User {
 
   @Column({ nullable: true })
   facebookId?: string
+
+  @Column({ nullable: true })
+  pictureUrl?: string
+
+  @Column({ nullable: true })
+  initials?: string
 }
