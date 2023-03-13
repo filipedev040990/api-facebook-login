@@ -4,7 +4,7 @@ import { ChangeProfilePicture } from '@/application/usecases'
 import { GetUserById, SavePicture } from '@/application/contracts/repositories'
 import { mocked } from 'jest-mock'
 import { UserProfile } from '@/domain/entities'
-import { IUploadFile, DeleteFile } from '@/application/contracts/adapters/file-storage'
+import { IUploadFile, IDeleteFile } from '@/application/contracts/adapters/file-storage'
 import { IUUIDGenerator } from '@/application/contracts/adapters/uuid'
 
 jest.mock('@/domain/entities/user-profile')
@@ -12,7 +12,7 @@ jest.mock('@/domain/entities/user-profile')
 describe('ChangeProfilePicture', () => {
   let file: Buffer
   let uuid: string
-  let fileStorage: MockProxy<IUploadFile & DeleteFile>
+  let fileStorage: MockProxy<IUploadFile & IDeleteFile>
   let crypto: MockProxy<IUUIDGenerator>
   let userRepository: MockProxy<SavePicture & GetUserById>
   let sut: IChangeProfilePicture
@@ -81,7 +81,7 @@ describe('ChangeProfilePicture', () => {
     })
   })
 
-  test('should call DeleteFile once and with correct values when UserRepository.savePicture throws and file exists', async () => {
+  test('should call IDeleteFile once and with correct values when UserRepository.savePicture throws and file exists', async () => {
     userRepository.savePictureUrl.mockRejectedValueOnce(new Error())
     expect.assertions(2)
 
@@ -93,7 +93,7 @@ describe('ChangeProfilePicture', () => {
     })
   })
 
-  test('should not call DeleteFile once and with correct values when UserRepository.savePicture throws and file does not exists', async () => {
+  test('should not call IDeleteFile once and with correct values when UserRepository.savePicture throws and file does not exists', async () => {
     userRepository.savePictureUrl.mockRejectedValueOnce(new Error())
     expect.assertions(1)
     const promise = sut.execute({ id: 'anyId', file: undefined })

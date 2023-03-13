@@ -7,10 +7,10 @@ export namespace IUploadFile {
   export type Output = string
 }
 
-export interface DeleteFile {
-  delete: (input: DeleteFile.Input) => Promise<void>
+export interface IDeleteFile {
+  delete: (input: IDeleteFile.Input) => Promise<void>
 }
 
-export namespace DeleteFile {
+export namespace IDeleteFile {
   export type Input = { key: string }
 }

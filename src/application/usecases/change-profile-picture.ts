@@ -1,12 +1,12 @@
 import { IChangeProfilePicture } from '@/domain/contracts/change-profile-picture'
 import { GetUserById, SavePicture } from '@/application/contracts/repositories'
 import { UserProfile } from '@/domain/entities'
-import { IUploadFile, DeleteFile } from '@/application/contracts/adapters/file-storage'
+import { IUploadFile, IDeleteFile } from '@/application/contracts/adapters/file-storage'
 import { IUUIDGenerator } from '@/application/contracts/adapters/uuid'
 
 export class ChangeProfilePicture implements IChangeProfilePicture {
   constructor (
-    private readonly fileStorage: IUploadFile & DeleteFile,
+    private readonly fileStorage: IUploadFile & IDeleteFile,
     private readonly crypto: IUUIDGenerator,
     private readonly userRepository: SavePicture & GetUserById
   ) {}
