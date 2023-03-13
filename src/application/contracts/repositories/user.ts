@@ -44,7 +44,7 @@ export interface GetUserById {
 
 export namespace GetUserById {
   export type Input = { id: string }
-  export type Output = { name?: string }
+  export type Output = { name?: string } | undefined
 }
 
 export interface SavePictureUrl {

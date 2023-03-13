@@ -17,7 +17,7 @@ export class ChangeProfilePicture implements IChangeProfilePicture {
     if (file) {
       data.pictureUrl = await this.fileStorage.upload({ file, key })
     } else {
-      data.name = (await this.userRepository.getById({ id })).name
+      data.name = (await this.userRepository.getById({ id }))?.name
     }
     const userProfile = new UserProfile(id)
     userProfile.setPicture(data)

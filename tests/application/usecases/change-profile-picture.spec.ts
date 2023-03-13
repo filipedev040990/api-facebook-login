@@ -52,6 +52,14 @@ describe('ChangeProfilePicture', () => {
     expect(userRepository.savePictureUrl).toHaveBeenCalledWith(...mocked(UserProfile).mock.instances)
   })
 
+  test('should call UserRepository.savePicture once and with correct input', async () => {
+    userRepository.getById.mockResolvedValueOnce(undefined)
+    await sut.execute({ id: 'anyId', file })
+
+    expect(userRepository.savePictureUrl).toHaveBeenCalledTimes(1)
+    expect(userRepository.savePictureUrl).toHaveBeenCalledWith(...mocked(UserProfile).mock.instances)
+  })
+
   test('should call UserRepository.getById once and with correct input when file is undefined', async () => {
     await sut.execute({ id: 'anyId', file: undefined })
 
